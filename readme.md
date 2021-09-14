@@ -1,0 +1,1 @@
+This is my classwork repository for [CC: Shaders](https://courses.newschool.edu/courses/PGTE5566/12352/), a Parsons MFA DT course taught by Justin Bakse.

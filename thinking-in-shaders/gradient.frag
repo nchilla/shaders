@@ -31,6 +31,15 @@ vec4 vertRedtoBlacktoRed(){
      return vec4(final,0.,0,1);
 }
 
+vec4 vertRedtoBlacktoRedPow(){
+    // I don't know why I made it stupidly complicated the first time but here's one using just abs
+     vec2 fragCoord_N = gl_FragCoord.xy / u_resolution;
+     float y = fragCoord_N.y*2.;
+     float final = pow(abs(1. - y),2.0);
+     
+     return vec4(final,0.,0,1);
+}
+
 vec4 vertRedtoBlacktoBlue(){
     vec2 fragCoord_N = gl_FragCoord.xy / u_resolution;
     float y = fragCoord_N.y * 2.;
@@ -53,7 +62,8 @@ void main() {
     //uncomment these to see the different versions
 	// gl_FragColor = vertBlackToRed();
     // gl_FragColor = horiWhiteToBlue();
-    // gl_FragColor = vertRedtoBlacktoRedSine();
-    // gl_FragColor = vertRedtoBlacktoRed();
+    gl_FragColor = vertRedtoBlacktoRedSine();
+    gl_FragColor = vertRedtoBlacktoRed();
     gl_FragColor=vertRedtoBlacktoBlue();
+    gl_FragColor=vertRedtoBlacktoRedPow();
 }
