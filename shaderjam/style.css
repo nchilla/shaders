@@ -1,4 +1,4 @@
-canvas{
+canvas,header{
   position:fixed;
   /* top:20vh;
   left:20vw;
@@ -8,4 +8,16 @@ canvas{
   left:0;
   width:100vw;
   height:100vh;
+}
+
+header{
+  pointer-events: none;
+}
+h1{
+  position:absolute;
+  bottom:0;
+  left:0;
+  margin:20px;
+  font-weight: 400;
+  font-family: monospace;
 }
