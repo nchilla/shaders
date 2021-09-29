@@ -59,9 +59,9 @@ vec3 tester(){
       comp3=dist;
     }else{
       comp=comp*dist;
-      if(i<25){
+      if(i<30){
         comp2=comp2*dist;
-      }else if(i<75){
+      }else if(i<60){
         comp3=comp3*dist;
       }
     }
