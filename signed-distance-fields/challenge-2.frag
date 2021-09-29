@@ -24,12 +24,6 @@ vec3 generate(){
     circle_2 = circle_2 - vec2(0.7, center_y + 0.15);
     float circle_2_sdf = circle(circle_2, 0.1);
     
-    // float circle_1_mod=mod(circle_1_sdf, 0.1) * 10.0;
-    // float circle_2_mod=mod(circle_2_sdf, 0.1) * 10.0;
-    
-    // float combined_sdf = circle_1_sdf * circle_2_sdf;
-    // float fill = combined_sdf * 20.;
-
     float combined_sdf =min(circle_1_sdf,circle_2_sdf);
     float fill = combined_sdf * 3.;
     fill= mod(fill, 0.1) * 10.0;
