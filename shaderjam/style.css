@@ -21,3 +21,7 @@ h1{
   font-weight: 400;
   font-family: monospace;
 }
+
+a{
+  pointer-events: all;
+}
