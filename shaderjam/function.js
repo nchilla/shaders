@@ -1,6 +1,7 @@
 //different brush options
 
 var sinceUpdated=0;
+var lastPos=[100,100];
 
 //in JS, record each coord position up to a point
 
@@ -57,12 +58,17 @@ function main(shaders){
         event.offsetX,
         canvas.height-event.offsetY,
       ]
-      brushMemory.push([Math.floor(mouseXy[0]),Math.floor(mouseXy[1])]);
+      let newVal=[Math.floor(mouseXy[0]),Math.floor(mouseXy[1])];
+      lastPos=newVal;
+      brushPush(newVal);
+    }
+
+    function brushPush(coords){
+      brushMemory.push(coords);
       if(brushMemory.length>100){
         brushMemory.shift();
       }
     }
-
 
 
     const vertShader=gl.createShader(gl.VERTEX_SHADER);
@@ -101,7 +107,12 @@ function main(shaders){
     gl.depthFunc(gl.LEQUAL);
 
     function render(){
+      if(sinceUpdated>2){
+        brushPush(lastPos);
+      }
       sinceUpdated++;
+
+      // console.log(brushMemory);
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
       // gl.clearColor(0.,0.,0.,1.);
       gl.useProgram(shaderProgram);

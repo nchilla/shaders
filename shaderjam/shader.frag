@@ -82,9 +82,5 @@ void main(){
     // epicMix=blobby();
     epicMix=tester();
 
-    // comp/=u_resolution.x;
-    // comp=1.-comp;
-    // comp=step(0.1,comp);
     gl_FragColor=vec4(epicMix,1.);
-    // gl_FragColor=vec4(vec3(comp),1.);
 }

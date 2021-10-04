@@ -27,7 +27,7 @@ vec3 generate(){
     float combined_sdf =min(circle_1_sdf,circle_2_sdf);
     float fill = combined_sdf * 3.;
     fill= mod(fill, 0.1) * 10.0;
-    fill = step(0.1, fill) - step(1., fill);
+    fill = step(0.1, fill);
     
     vec3 c = vec3(fill);
 
