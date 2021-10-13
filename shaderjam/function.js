@@ -112,13 +112,10 @@ function main(shaders){
       }
       sinceUpdated++;
 
-      // console.log(brushMemory);
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-      // gl.clearColor(0.,0.,0.,1.);
       gl.useProgram(shaderProgram);
       gl.uniform2fv(uResLocation,resolutionXy);
       gl.uniform2fv(uMouseLocation,mouseXy);
-      // gl.uniform2fv(uBrushLocation,new Float32Array(brushMemory));
       gl.uniform2fv(uBrushLocation,brushMemory.flat());
       gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
 
