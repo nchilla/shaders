@@ -74,30 +74,6 @@ function main(sources){
       texture:initializeBuffer(gl,positions,programData.attribs.textureCoord,attrOptions)
     }
 
-    // let buffers;
-    // buffers.position=gl.createBuffer();
-    // gl.bindBuffer(gl.ARRAY_BUFFER,buffers.position);
-    // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(programData.attribs.vertexPosition),gl.STATIC_DRAW);
-    // gl.vertexAttribPointer(
-    //       programData.attribs.vertexPosition,
-    //       attrOptions.numComponents,
-    //       attrOptions.type,
-    //       attrOptions.normalize,
-    //       attrOptions.stride,
-    //       attrOptions.offset);
-    // gl.enableVertexAttribArray(attrib);
-
-
-
-
-
-
-
-
-
-    // bufferToAttribute(gl,buffers.position,programData.attribs.vertexPosition,attrOptions);
-    // bufferToAttribute(gl,buffers.texture,programData.attribs.vertexPosition,attrOptions);
-
 
 
     function render(){

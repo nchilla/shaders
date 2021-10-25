@@ -4,9 +4,10 @@ var resolutionXy={x:500,y:500};
 let canvas=document.querySelector('canvas');
 let ctx=canvas.getContext('2d');
 let squares=[];
-let sq=20;
+let sq=10;
 let xCount=resolutionXy.x/sq;
 let yCount=resolutionXy.y/sq;
+let corners=true;
 
 // let mouse
 
@@ -23,9 +24,14 @@ document.querySelectorAll('button').forEach((item, i) => {
       break;
       case 'flood-fill':
       floodGradient();
+      // noAnimationFlood();
       break;
       case 'flood-fill-voronoi':
       floodFillVoronoi();
+      break;
+      case 'corners':
+      corners=corners?false:true;
+      target.innerText=corners?'turn off corners in flood':'include corners';
       break;
 
     }
@@ -37,10 +43,10 @@ document.querySelectorAll('button').forEach((item, i) => {
 
 
 let textured=[
-  {x:5,y:10,i:0,k:'a'},
-  {x:20,y:23,i:0,k:'b'},
-  {x:17,y:10,i:0,k:'c'},
-  {x:9,y:5,i:0,k:'d'},
+  {x:5+20,y:10+20,i:0,k:'a'},
+  {x:20+20,y:23+20,i:0,k:'b'},
+  {x:17+20,y:10+20,i:0,k:'c'},
+  {x:9+20,y:5+20,i:0,k:'d'},
 
 
 ]
@@ -107,17 +113,21 @@ function floodGradient(){
       //fill texture square
       let col=item.i*10;
       fillSquare(item,`rgb(${col},${col},${col})`);
-      let neighbors=getNeighbors(item,{x:xCount,y:yCount},layer);
-      for(var x=0;x<4;x++){
-        let neigh=neighbors[x];
-        if(!filled.some(a=>a.x==neigh.x&&a.y==neigh.y)){
-          filled.push(neigh);
-          let ncol=neigh.i*10;
-          fillSquare(neigh,`rgb(${ncol},${ncol},${ncol})`);
+      if(item.i==layer-1){
+        let neighbors=getNeighbors(item,{x:xCount,y:yCount},layer);
+        let max=corners?8:4;
+        for(var x=0;x<max;x++){
+          let neigh=neighbors[x];
+          if(!filled.some(a=>a.x==neigh.x&&a.y==neigh.y)){
+            filled.push(neigh);
+            let ncol=neigh.i*10;
+            fillSquare(neigh,`rgb(${ncol},${ncol},${ncol})`);
 
-          changeCount++;
+            changeCount++;
+          }
         }
       }
+
 
     });
     // console.log(changeCount);
@@ -130,8 +140,57 @@ function floodGradient(){
 
   }
 
-
 }
+
+
+function noAnimationFlood(){
+  let flood=[...squares];
+  let filled=[...textured];
+  let layer=1;
+  let changeCount=1;
+
+  while(changeCount>0){
+    changeCount=0;
+    fillLayer();
+  }
+
+  filled.forEach((item, i) => {
+    let col=item.i*10;
+    fillSquare(item,`rgb(${col},${col},${col})`);
+  });
+
+
+
+  function fillLayer(){
+    changeCount=0;
+    filled.forEach((item, i) => {
+      //fill texture square
+      // let col=item.i*10;
+      // fillSquare(item,`rgb(${col},${col},${col})`);
+      if(item.i==layer-1){
+        let neighbors=getNeighbors(item,{x:xCount,y:yCount},layer);
+        let max=corners?8:4;
+        for(var x=0;x<max;x++){
+          let neigh=neighbors[x];
+          if(!filled.some(a=>a.x==neigh.x&&a.y==neigh.y)){
+            filled.push(neigh);
+            let ncol=neigh.i*10;
+            fillSquare(neigh,`rgb(${ncol},${ncol},${ncol})`);
+
+            changeCount++;
+          }
+        }
+      }
+
+
+    });
+    // console.log(changeCount);
+    layer++;
+
+  }
+}
+
+
 
 function floodFillVoronoi(){
   let flood=[...squares];
@@ -164,21 +223,23 @@ function floodFillVoronoi(){
       let col=item.i*10;
 
       fillSquare(item,decideColor(item.k));
-      let neighbors=getNeighbors(item,{x:xCount,y:yCount},layer,item.k);
-      for(var x=0;x<4;x++){
-        let neigh=neighbors[x];
-        if(!filled.some(a=>a.x==neigh.x&&a.y==neigh.y)){
-          filled.push(neigh);
-          let ncol=neigh.i*10;
 
-          fillSquare(neigh,decideColor(item.k));
+      if(item.i==layer-1){
+        let neighbors=getNeighbors(item,{x:xCount,y:yCount},layer,item.k);
+        let max=corners?8:4;
+        for(var x=0;x<max;x++){
+          let neigh=neighbors[x];
+          if(!filled.some(a=>a.x==neigh.x&&a.y==neigh.y)){
+            filled.push(neigh);
+            let ncol=neigh.i*10;
 
-          changeCount++;
+            fillSquare(neigh,decideColor(item.k));
+
+            changeCount++;
+          }
         }
       }
-
     });
-    // console.log(changeCount);
     if(changeCount>0){
 
       layer++;
@@ -188,6 +249,12 @@ function floodFillVoronoi(){
 }
 
 }
+
+
+
+
+
+
 
 function getNeighbors(v,bounds,layer,color){
   let vals=[
@@ -201,7 +268,8 @@ function getNeighbors(v,bounds,layer,color){
     {x:v.x-1,y:v.y-1,i:layer,k:color}
 
   ]
-  for(var i=0;i<4;i++){
+  let max=corners?8:4;
+  for(var i=0;i<max;i++){
     if(
       vals[i].x<0||vals[i].x>bounds.x||
       vals[i].y<0||vals[i].y>bounds.y
