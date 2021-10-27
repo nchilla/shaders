@@ -1,10 +1,20 @@
 const input = document.querySelector('#input canvas');
+let ctx=input.getContext('2d');
 const output = document.querySelector('#output canvas');
 
+//gl
+const gl=output.getContext('webgl');
+var jfaProgram;
+var canvasData;
+var jfaStorage;
+var jfaAltStorage;
+var buffers;
 
-
+//uniforms
 var resolutionXy=[input.width,input.height]
 var mouseXy=[0,0];
+var passCount=0;
+let startTime;
 
 const positions=[
     1.0, 1.0,
@@ -19,20 +29,28 @@ const positions=[
 window.addEventListener('load',startUp);
 
 function startUp(){
+  // ctx.font="400px 'Courier New'";
 
-  let ctx2d=input.getContext('2d');
-  ctx2d.font="600px 'Courier New'";
-  ctx2d.fillText('A', 60, 400);
-  ctx2d.strokeText('A',60, 400);
+  // ctx.font="40px 'Courier New'";
 
+  ctx.font="400px serif";
+  ctx.fillText('A', 100, 400);
+
+  // ctx.font="40px 'Courier New'";
+  // ctx.fillText('A', 40, 80);
+  // ctx.fillText('B', 400, 500);
 
   let vertShaderSrc=fetch('shader.vert').then((response) => {return response.text();});
+  let jfaShaderSrc=fetch('jfa.frag').then((response) => {return response.text();});
   let fragShaderSrc=fetch('shader.frag').then((response) => {return response.text();});
-  // let fragShaderSrc=fetch('frag-alt.frag').then((response) => {return response.text();});
-  Promise.all([vertShaderSrc,fragShaderSrc]).then((values) => {
+  Promise.all([vertShaderSrc,jfaShaderSrc,fragShaderSrc]).then((values) => {
+      startTime = Date.now();
       main(values);
-      // alt(values);
   });
+
+  // document.querySelector('#refresh').addEventListener('click',function(){
+  //   startTime = Date.now();
+  // });
 
 }
 
@@ -41,30 +59,53 @@ function startUp(){
 
 
 function main(sources){
-
-    const gl=output.getContext('webgl');
-
-    var programData={
-      program:initializeShaderProgram(gl,sources)
+    jfaProgram={
+      program:initializeShaderProgram(gl,sources[0],sources[1])
     }
-    programData={
-      ...programData,
-      ...{
-        attribs:{
-          vertexPosition:gl.getAttribLocation(programData.program,'aVertexPosition'),
-          textureCoord: gl.getAttribLocation(programData.program, 'a_texture_coord')
-        },
-        uniforms:{
-          resolution:gl.getUniformLocation(programData.program,'u_resolution'),
-          sampler:gl.getUniformLocation(programData.program, 'u_sampler')
-        }
+    shaderProgram={
+      program:initializeShaderProgram(gl,sources[0],sources[2])
+    }
+
+
+    let jfaProperties={
+      attribs:{
+        vertexPosition:gl.getAttribLocation(jfaProgram.program,'aVertexPosition'),
+        textureCoord: gl.getAttribLocation(jfaProgram.program, 'a_texture_coord'),
+      },
+      uniforms:{
+        resolution:gl.getUniformLocation(jfaProgram.program,'u_resolution'),
+        sampler:gl.getUniformLocation(jfaProgram.program, 'u_sampler'),
+        pass:gl.getUniformLocation(jfaProgram.program, 'u_pass'),
+        time:gl.getUniformLocation(jfaProgram.program, "u_time")
+      }
+    }
+    let shaderProperties={
+      attribs:{
+        vertexPosition:gl.getAttribLocation(shaderProgram.program,'aVertexPosition'),
+        textureCoord: gl.getAttribLocation(shaderProgram.program, 'a_texture_coord')
+      },
+      uniforms:{
+        resolution:gl.getUniformLocation(shaderProgram.program,'u_resolution'),
+        sampler:gl.getUniformLocation(shaderProgram.program, 'u_sampler'),
+        pass:gl.getUniformLocation(shaderProgram.program, 'u_pass'),
+        time:gl.getUniformLocation(shaderProgram.program, "u_time")
       }
     }
 
-    let texture=loadCanvasTexture(gl, input);
-    // let texture=loadTexture(gl,'a-cap.png');
-    // let texture=handleLoadedTexture(gl, input);
-    // handleLoadedTexture(gl,texture, input);
+    jfaProgram={
+      ...jfaProgram,
+      ...jfaProperties
+    }
+    shaderProgram={
+      ...shaderProgram,
+      ...shaderProperties
+    }
+
+
+
+    canvasData=loadCanvasTexture(gl, input);
+    jfaStorage=declareTexture();
+    jfaAltStorage=declareTexture();
 
 
 
@@ -77,39 +118,87 @@ function main(sources){
       offset:0
     }
 
-    let buffers={
-      position:initializeBuffer(gl,positions,programData.attribs.vertexPosition,attrOptions),
-      texture:initializeBuffer(gl,positions,programData.attribs.textureCoord,attrOptions)
+    buffers={
+      position:initializeBuffer(gl,positions,jfaProgram.attribs.vertexPosition,attrOptions),
+      texture:initializeBuffer(gl,positions,jfaProgram.attribs.textureCoord,attrOptions),
+      jfa:declareFrameBuffer(jfaStorage)
     }
 
 
-
-    function render(){
-
-      gl.useProgram(programData.program);
-
-      gl.enable(gl.DEPTH_TEST);
-      gl.depthFunc(gl.LEQUAL); //I think these two are 3d things that I can ignore
-
-
-      // Tell WebGL we want to affect texture unit 0
-      gl.activeTexture(gl.TEXTURE0);
-      // Bind the texture to texture unit 0
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      // Tell the shader we bound the texture to texture unit 0
-      gl.uniform1i(programData.uniforms.sampler, 0);
-
-      gl.uniform2fv(programData.uniforms.resolution,resolutionXy);
-
-      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
-      gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
-
-      requestAnimationFrame(render);
-    }
-    requestAnimationFrame(render);
+    window.requestAnimationFrame(render);
+    // render();
 
 }
+
+
+function render(){
+  renderJumpFlood();
+  renderPoster();
+  passCount++;
+  window.requestAnimationFrame(render);
+}
+
+
+function renderJumpFlood(input,output){
+  let inputBuffer=passCount%2==0?jfaStorage:jfaAltStorage;
+  let outputBuffer=passCount%2==0?jfaAltStorage:jfaStorage;
+
+  gl.useProgram(jfaProgram.program);
+  gl.enable(gl.DEPTH_TEST);
+  gl.depthFunc(gl.LEQUAL); //I think these two are 3d things that I can ignore
+
+  buffers.jfa=declareFrameBuffer(outputBuffer);
+  gl.activeTexture(gl.TEXTURE0);
+  if(passCount>0){
+    gl.bindTexture(gl.TEXTURE_2D, inputBuffer);
+    gl.uniform1i(jfaProgram.uniforms.sampler, 0);
+  }else{
+    gl.bindTexture(gl.TEXTURE_2D, canvasData);
+    gl.uniform1i(jfaProgram.uniforms.sampler, 0);
+  }
+
+
+
+
+  //other uniforms
+  // console.log(passCount);
+  gl.uniform1f(jfaProgram.uniforms.pass, passCount);
+  gl.uniform2fv(jfaProgram.uniforms.resolution,resolutionXy);
+  gl.uniform1f(jfaProgram.uniforms.time, (Date.now() - startTime) * .001);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+}
+
+function renderPoster(){
+  let inputBuffer=passCount%2==0?jfaAltStorage:jfaStorage;
+  gl.useProgram(shaderProgram.program);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, inputBuffer);
+  gl.uniform1i(shaderProgram.uniforms.sampler, 0);
+
+  // gl.useProgram(jfaProgram.program);
+  // gl.enable(gl.DEPTH_TEST);
+  // gl.depthFunc(gl.LEQUAL);
+
+  // Tell WebGL we want to affect texture unit 0
+  // Bind the texture to texture unit 0
+
+  // Tell the shader we bound the texture to texture unit 0
+
+
+  //other uniforms
+  gl.uniform1f(shaderProgram.uniforms.pass, passCount);
+  gl.uniform2fv(shaderProgram.uniforms.resolution,resolutionXy);
+  gl.uniform1f(shaderProgram.uniforms.time, (Date.now() - startTime) * .001);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  //
+  // gl.clearColor(1, 1, 1, 1);   // clear to white
+  // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+}
+
 
 
 function loadCanvasTexture(gl, canvas, wrap, min_filter) {
@@ -120,34 +209,42 @@ function loadCanvasTexture(gl, canvas, wrap, min_filter) {
     const internalFormat = gl.RGBA;
     const srcFormat = gl.RGBA;
     const srcType = gl.UNSIGNED_BYTE;
-    // gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,width, height, border, srcFormat, srcType,pixel);
 
-    const texture = gl.createTexture();
+    const texture2d = gl.createTexture();
 
-    // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.bindTexture(gl.TEXTURE_2D, texture2d);
     gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,srcFormat, srcType, canvas);
     if (isPowerOf2(canvas.width) && isPowerOf2(canvas.height)) {
       console.log('is power of 2')
-        // Yes, it's a power of 2. Generate mips.
         gl.generateMipmap(gl.TEXTURE_2D);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrap);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrap);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, min_filter);
 
     } else {
-        // No, it's not a power of 2. Turn off mips and set
-        // wrapping to clamp to edge
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     }
-
-    // gl.bindTexture(gl.TEXTURE_2D, null);
-
-
-    return texture;
+    return texture2d;
 }
+
+function declareTexture() {
+    const level = 0;
+    const internalFormat = gl.RGBA;
+    const srcFormat = gl.RGBA;
+    const srcType = gl.UNSIGNED_BYTE;
+    const texture2d = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture2d);
+    gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, 500, 500, 0, srcFormat, gl.UNSIGNED_BYTE, null);
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+
+    return texture2d;
+}
+
 
 
 function isPowerOf2(value) {
@@ -156,9 +253,9 @@ function isPowerOf2(value) {
 
 
 //not immediately relevant-------------------
-function initializeShaderProgram(gl,sources){
-  var vertShader=loadShader(gl,gl.VERTEX_SHADER,sources[0]);
-  var fragShader=loadShader(gl,gl.FRAGMENT_SHADER,sources[1]);
+function initializeShaderProgram(gl,vertex,fragment){
+  var vertShader=loadShader(gl,gl.VERTEX_SHADER,vertex);
+  var fragShader=loadShader(gl,gl.FRAGMENT_SHADER,fragment);
 
   var shaderProgram=gl.createProgram();
   gl.attachShader(shaderProgram,vertShader);
@@ -183,85 +280,21 @@ function initializeBuffer(gl,data,attrib,options){
   gl.enableVertexAttribArray(attrib);
 }
 
+function declareFrameBuffer(storeTexture){
+  const framebuffer = gl.createFramebuffer();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+  gl.viewport(0, 0, 500, 500);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, storeTexture, 0);
+  // gl.viewport(0, 0, 500, 500);
+
+  return framebuffer;
+}
+
+
+
 function loadShader(gl,type,source){
   const shader=gl.createShader(type);
   gl.shaderSource(shader,source);
   gl.compileShader(shader);
   return shader;
-}
-
-
-
-//not in use----------------------------------
-
-function handleLoadedTexture(gl, textureCanvas) {
-    let texture = gl.createTexture();
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textureCanvas); // This is the important line!
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-    gl.generateMipmap(gl.TEXTURE_2D);
-
-    gl.bindTexture(gl.TEXTURE_2D, null);
-    return texture;
-}
-
-
-
-function loadTexture(gl, url, wrap, min_filter) {
-
-    wrap = wrap || gl.REPEAT;
-    min_filter = min_filter || gl.LINEAR_MIPMAP_LINEAR
-
-    const texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-
-    // Because images have to be download over the internet
-    // they might take a moment until they are ready.
-    // Until then put a single pixel in the texture so we can
-    // use it immediately. When the image has finished downloading
-    // we'll update the texture with the contents of the image.
-    const level = 0;
-    const internalFormat = gl.RGBA;
-    const width = 1;
-    const height = 1;
-    const border = 0;
-    const srcFormat = gl.RGBA;
-    const srcType = gl.UNSIGNED_BYTE;
-    const pixel = new Uint8Array([0, 0, 255, 255]);  // opaque blue
-    gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-        width, height, border, srcFormat, srcType,
-        pixel);
-
-    const image = new Image();
-    image.onload = function () {
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-            srcFormat, srcType, image);
-
-        // WebGL1 has different requirements for power of 2 images
-        // vs non power of 2 images so check if the image is a
-        // power of 2 in both dimensions.
-        if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
-            // Yes, it's a power of 2. Generate mips.
-            gl.generateMipmap(gl.TEXTURE_2D);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrap);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrap);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, min_filter);
-
-        } else {
-            // No, it's not a power of 2. Turn off mips and set
-            // wrapping to clamp to edge
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        }
-    };
-
-	  image.crossOrigin = "";   // ask for CORS permission
-    image.src = url;
-
-    return texture;
 }
