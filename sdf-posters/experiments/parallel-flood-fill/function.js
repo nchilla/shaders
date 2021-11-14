@@ -129,7 +129,10 @@ function render(){
   renderPoster();
   passCount++;
 
-  console.log(passCount,Math.floor(Math.pow(2, (Math.log2(500) - passCount - 1))));
+  if(passCount>0){
+    console.log(passCount-1,Math.floor(Math.pow(2, (Math.log2(500) - (passCount - 1) - 1))));
+  }
+
   // window.requestAnimationFrame(render);
   // if(passCount<=resolutionXy[0]){
   //   window.requestAnimationFrame(render);
