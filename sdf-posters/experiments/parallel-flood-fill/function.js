@@ -125,13 +125,15 @@ function main(sources){
 
 function render(){
   console.log('rendering');
+  if(passCount>0){
+    console.log(passCount-1,Math.floor(Math.pow(2, (Math.log2(500) - (passCount - 1) - 1))));
+  }
+
+
   renderJumpFlood();
   renderPoster();
   passCount++;
 
-  if(passCount>0){
-    console.log(passCount-1,Math.floor(Math.pow(2, (Math.log2(500) - (passCount - 1) - 1))));
-  }
 
   // window.requestAnimationFrame(render);
   // if(passCount<=resolutionXy[0]){
