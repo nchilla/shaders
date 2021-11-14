@@ -1,5 +1,5 @@
 var resolutionXy={x:500,y:500};
-let sq=2;
+let sq=20;
 let canvas=document.querySelector('canvas');
 let ctx=canvas.getContext('2d');
 

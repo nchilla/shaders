@@ -29,16 +29,11 @@ const positions=[
 window.addEventListener('load',startUp);
 
 function startUp(){
-  // ctx.font="400px 'Courier New'";
 
-  // ctx.font="40px 'Courier New'";
 
   ctx.font="400px serif";
   ctx.fillText('A', 100, 400);
 
-  // ctx.font="40px 'Courier New'";
-  // ctx.fillText('A', 40, 80);
-  // ctx.fillText('B', 400, 500);
 
   let vertShaderSrc=fetch('shader.vert').then((response) => {return response.text();});
   let jfaShaderSrc=fetch('jfa.frag').then((response) => {return response.text();});
@@ -47,10 +42,6 @@ function startUp(){
       startTime = Date.now();
       main(values);
   });
-
-  // document.querySelector('#refresh').addEventListener('click',function(){
-  //   startTime = Date.now();
-  // });
 
 }
 
@@ -127,15 +118,22 @@ function main(sources){
 
     window.requestAnimationFrame(render);
     // render();
+    // document.querySelector('#refresh').addEventListener('click',render);
 
 }
 
 
 function render(){
+  console.log('rendering');
   renderJumpFlood();
   renderPoster();
   passCount++;
+
+  // console.log(passCount,Math.floor(Math.pow(2, (Math.log2(500) - passCount - 1))));
   window.requestAnimationFrame(render);
+  // if(passCount<=resolutionXy[0]){
+  //   window.requestAnimationFrame(render);
+  // }
 }
 
 
@@ -160,8 +158,7 @@ function renderJumpFlood(input,output){
 
 
 
-  //other uniforms
-  // console.log(passCount);
+
   gl.uniform1f(jfaProgram.uniforms.pass, passCount);
   gl.uniform2fv(jfaProgram.uniforms.resolution,resolutionXy);
   gl.uniform1f(jfaProgram.uniforms.time, (Date.now() - startTime) * .001);
@@ -177,24 +174,12 @@ function renderPoster(){
   gl.bindTexture(gl.TEXTURE_2D, inputBuffer);
   gl.uniform1i(shaderProgram.uniforms.sampler, 0);
 
-  // gl.useProgram(jfaProgram.program);
-  // gl.enable(gl.DEPTH_TEST);
-  // gl.depthFunc(gl.LEQUAL);
 
-  // Tell WebGL we want to affect texture unit 0
-  // Bind the texture to texture unit 0
-
-  // Tell the shader we bound the texture to texture unit 0
-
-
-  //other uniforms
   gl.uniform1f(shaderProgram.uniforms.pass, passCount);
   gl.uniform2fv(shaderProgram.uniforms.resolution,resolutionXy);
   gl.uniform1f(shaderProgram.uniforms.time, (Date.now() - startTime) * .001);
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-  //
-  // gl.clearColor(1, 1, 1, 1);   // clear to white
-  // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
 
   gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
 }

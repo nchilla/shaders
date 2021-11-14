@@ -28,7 +28,7 @@ void main(){
 
     vec2 mapped_coord=mapping();
     vec4 texturePixel=texture2D(u_sampler,mapped_coord);
-    float dist=length(texturePixel.rg-mapped_coord);
+    float dist=length(texturePixel.rg-mapped_coord)*20.;
 
     gl_FragColor=texturePixel;
     // gl_FragColor=vec4(vec3(dist),1.);
