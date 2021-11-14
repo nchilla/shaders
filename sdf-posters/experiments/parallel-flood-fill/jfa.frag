@@ -2,7 +2,6 @@
 precision highp float;
 
 
-// uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform vec2 u_resolution;
 varying highp vec2 v_texture_coord;
