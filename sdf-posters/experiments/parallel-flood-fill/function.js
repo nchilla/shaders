@@ -116,9 +116,9 @@ function main(sources){
     }
 
 
-    window.requestAnimationFrame(render);
+    // window.requestAnimationFrame(render);
     // render();
-    // document.querySelector('#refresh').addEventListener('click',render);
+    document.querySelector('#refresh').addEventListener('click',render);
 
 }
 
@@ -129,8 +129,8 @@ function render(){
   renderPoster();
   passCount++;
 
-  // console.log(passCount,Math.floor(Math.pow(2, (Math.log2(500) - passCount - 1))));
-  window.requestAnimationFrame(render);
+  console.log(passCount,Math.floor(Math.pow(2, (Math.log2(500) - passCount - 1))));
+  // window.requestAnimationFrame(render);
   // if(passCount<=resolutionXy[0]){
   //   window.requestAnimationFrame(render);
   // }
