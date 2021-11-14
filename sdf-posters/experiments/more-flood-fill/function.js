@@ -5,7 +5,7 @@ let ctx=canvas.getContext('2d');
 
 let colorGrid;
 let seeds=[];
-let seedCount=20;
+let seedCount=3;
 
 let xCount;
 let yCount;
@@ -54,7 +54,8 @@ function gridReset(){
         color:0,
         wave:undefined,
         origin:undefined,
-        distance:undefined
+        jfaOrigin:undefined,
+        distance:undefined,
       })
     }
 
@@ -66,7 +67,7 @@ function gridReset(){
       color:1,
       wave:1,
       origin:i,
-      jfaOrigin:seeds[i],
+      jfaOrigin:[...seeds[i]],
       distance:0
     }
   }
@@ -82,6 +83,36 @@ function startUp(){
   resolutionChange();
   buttons();
 
+  let mouseDown=false;
+
+  document.querySelector('canvas').addEventListener('mousedown',function(){mouseDown=true;})
+  document.querySelector('canvas').addEventListener('mouseup',function(){mouseDown=false;})
+
+  window.addEventListener('mousemove',function(){
+    let normX=Math.floor(event.clientX/sq)
+    let normY=Math.floor(event.clientY/sq);
+    // console.log(seeds);
+    for(let x=-1;x<=1;x++){
+      //loop through neigbor y vals
+      for(let y=-1;y<=1;y++){
+        let nX=normX+x;
+        let nY=normY+y;
+        if(mouseDown&&!seeds.includes([nX,nY])){
+          seeds.push([nX,nY]);
+          fillSquare(nX,nY,`rgb(0,0,0)`);
+        }
+
+
+      }
+    }
+
+
+
+    // if(mouseDown&&!seeds.includes([normX,normY])){
+    //   seeds.push([normX,normY]);
+    //   fillSquare(normX,normY,`rgb(0,0,0)`);
+    // }
+  })
 
 }
 
@@ -106,10 +137,12 @@ function buttons(){
       manhattanGradientPaint();
       break;
       case 'sdf':
+      gridReset();
       breadthFirstFlood();
       sdfPaint();
       break;
       case 'jump-flood':
+      gridReset();
       jumpFlood();
       jfaSdf();
       break;
@@ -168,11 +201,57 @@ function breadthFirstFlood(){
 
 
 function jumpFlood(){
+  let jfaSeeds=[...seeds];
+  let passIndex=0;
+  let n=Math.log2(resolutionXy.x);
 
+
+  while(passIndex < n){
+    // let newqueue;
+    let offset=Math.floor(Math.pow(2, (Math.log2(n) - passIndex - 1)));
+    for(let i =0; i<jfaSeeds.length;i++){
+       //iterate through neighboring pixels
+       for(let x=-1;x<=1;x++){
+         for(let y=-1;y<=1;y++){
+           let nX=jfaSeeds[i][0] + x * offset;
+           let nY=jfaSeeds[i][1] + y * offset;
+
+            let q0=jfaSeeds[i][0];
+            let q1=jfaSeeds[i][1]
+           if(nX>=0&&nX<xCount&&nY>=0&&nY<yCount){
+             //check if it's filled in
+             if(colorGrid[nX][nY].color==1){
+               //if it is, compare origin distances
+               // console.log(colorGrid[nX][nY]);
+               let oldSeedDist=distance([nX,nY],colorGrid[nX][nY].jfaOrigin);
+               let newSeedDist=distance([nX,nY],colorGrid[q0][q1].jfaOrigin);
+
+               if(oldSeedDist>newSeedDist){
+                 colorGrid[nX][nY].jfaOrigin=colorGrid[q0][q1].jfaOrigin;
+               }
+
+             }else{
+               //if it's not, fill in and set the origin
+               colorGrid[nX][nY].color=1;
+               colorGrid[nX][nY].jfaOrigin=colorGrid[q0][q1].jfaOrigin;
+               jfaSeeds.push([nX,nY]);
+             }
+
+
+           }
+
+         }
+       }
+
+    }
+    passIndex++;
+  }
 
 
   // console.log(colorGrid)
 }
+
+
 
 function compareManhattanDistance(vec,origin1,origin2){
   let d1=Math.abs(vec[0]-origin1[0])+Math.abs(vec[1]-origin1[1]);
@@ -208,15 +287,18 @@ function sdfPaint(){
 }
 
 function jfaSdf(){
-  // console.log(colorGrid);
   for(let x=0,n1=colorGrid.length;x<n1;x++){
     for(let y=0,n2=colorGrid[x].length;y<n2;y++){
-      let org=colorGrid[x][y].jfaOrigin?colorGrid[x][y].jfaOrigin:[0,0];
+      let org=colorGrid[x][y].jfaOrigin;
+      // console.log([x,y],colorGrid[x][y].jfaOrigin);
       let d=distance([x,y],org);
-      let v=colorGrid[x][y].wave?(255*(d/(0.5*resolutionXy.x/sq))):255;
+
+      let v=colorGrid[x][y].wave?0:(255*(d/(0.5*resolutionXy.x/sq)));
       fillSquare(x,y,`rgb(${v},${v},${v})`);
+      // fillSquare(x,y,`rgb(${d},${d},${d})`);
     }
   }
+  console.log('done')
 }
 
 
