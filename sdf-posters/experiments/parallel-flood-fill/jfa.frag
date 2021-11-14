@@ -17,7 +17,7 @@ float img_height=500.;
 
 
 vec2 mapping(vec2 coord){
-  // scales the texture to the canvas coordinates — not sure why I had to do this
+  // scales the coordinate to the texture dimensions — not sure why I had to do this
   vec2 mapped_coord=coord;
   mapped_coord-=u_resolution/2.;
   float scale=500.;
