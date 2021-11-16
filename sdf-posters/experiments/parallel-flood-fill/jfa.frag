@@ -130,6 +130,7 @@ vec4 jfaPrep(){
   vec4 texturePixel=load0(gl_FragCoord.xy);
   texturePixel.rg=vec2(0.,0.);
   if(texturePixel.a>0.){
+    // texturePixel.rg=(gl_FragCoord.xy-0.5) / img_size.xy;
     texturePixel.rg=gl_FragCoord.xy;
   }
   texturePixel.a=1.;

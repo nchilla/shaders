@@ -29,6 +29,12 @@ void main(){
     // float dist=length(texturePixel.rg-mapped_coord)*20.;
     // float dist=length(texturePixel.rg-gl_FragCoord.xy);
     // texturePixel.rg=norm(texturePixel.rg);
+
+
+    // texturePixel.rg=(texturePixel.rg-0.5) / img_size.xy;
     gl_FragColor=texturePixel;
+
+
+
     // gl_FragColor=vec4(vec3(dist),1.);
 }
