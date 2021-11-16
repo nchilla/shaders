@@ -1,5 +1,5 @@
 var resolutionXy={x:500,y:500};
-let sq=20;
+let sq=10;
 let canvas=document.querySelector('canvas');
 let ctx=canvas.getContext('2d');
 
@@ -54,7 +54,6 @@ function gridReset(){
         color:0,
         wave:undefined,
         origin:undefined,
-        jfaOrigin:undefined,
         distance:undefined,
       })
     }
@@ -66,8 +65,7 @@ function gridReset(){
     colorGrid[seeds[i][0]][seeds[i][1]]={
       color:1,
       wave:1,
-      origin:i,
-      jfaOrigin:[...seeds[i]],
+      origin:[...seeds[i]],
       distance:0
     }
   }
@@ -106,12 +104,6 @@ function startUp(){
       }
     }
 
-
-
-    // if(mouseDown&&!seeds.includes([normX,normY])){
-    //   seeds.push([normX,normY]);
-    //   fillSquare(normX,normY,`rgb(0,0,0)`);
-    // }
   })
 
 }
@@ -128,7 +120,6 @@ function buttons(){
       case 'manhattan-flood':
       gridReset();
       breadthFirstFlood();
-      // console.log(colorGrid)
       manhattanGradientPaint();
       break;
       case 'change-seeds':
@@ -139,15 +130,12 @@ function buttons(){
       case 'euclid-flood':
       gridReset();
       euclidFlood();
-      console.log(colorGrid);
-      jfaSdf();
-      // breadthFirstFlood();
-      // sdfPaint();
+      euclidGradientPaint();
       break;
       case 'jump-flood':
       gridReset();
       jumpFlood();
-      jfaSdf();
+      euclidGradientPaint();
       break;
     }
   }
@@ -185,7 +173,6 @@ function breadthFirstFlood(){
             //record when it was filled
             colorGrid[nX][nY].wave=wave;
             //record the seed where it originated
-            colorGrid[nX][nY].origin=colorGrid[bX][bY].origin;
             //add it to the queue
             newQueue.push([nX,nY]);
           }
@@ -229,16 +216,19 @@ function euclidFlood(){
               //record when it was filled
               colorGrid[nX][nY].wave=wave;
               //record the seed where it originated
-              colorGrid[nX][nY].jfaOrigin=colorGrid[bX][bY].jfaOrigin;
+              colorGrid[nX][nY].origin=colorGrid[bX][bY].origin;
               //add it to the queue
               newQueue.push([nX,nY]);
             }else{
-              let oldDist=distance([nX,nY],colorGrid[nX][nY].jfaOrigin);
-              let newDist=distance([nX,nY],colorGrid[bX][bY].jfaOrigin);
-              if(newDist<oldDist){
-                colorGrid[nX][nY].jfaOrigin=colorGrid[bX][bY].jfaOrigin;
-                newQueue.push([nX,nY]);
+              if(colorGrid[nX][nY].origin!==colorGrid[bX][bY].origin){
+                let oldDist=distance([nX,nY],colorGrid[nX][nY].origin);
+                let newDist=distance([nX,nY],colorGrid[bX][bY].origin);
+                if(newDist<oldDist){
+                  colorGrid[nX][nY].origin=colorGrid[bX][bY].origin;
+                  newQueue.push([nX,nY]);
+                }
               }
+
             }
           }
         }
@@ -281,17 +271,17 @@ function jumpFlood(){
              if(colorGrid[nX][nY].color==1){
                //if it is, compare origin distances
                // console.log(colorGrid[nX][nY]);
-               let oldSeedDist=distance([nX,nY],colorGrid[nX][nY].jfaOrigin);
-               let newSeedDist=distance([nX,nY],colorGrid[q0][q1].jfaOrigin);
+               let oldSeedDist=distance([nX,nY],colorGrid[nX][nY].origin);
+               let newSeedDist=distance([nX,nY],colorGrid[q0][q1].origin);
 
                if(oldSeedDist>newSeedDist){
-                 colorGrid[nX][nY].jfaOrigin=colorGrid[q0][q1].jfaOrigin;
+                 colorGrid[nX][nY].origin=colorGrid[q0][q1].origin;
                }
 
              }else{
                //if it's not, fill in and set the origin
                colorGrid[nX][nY].color=1;
-               colorGrid[nX][nY].jfaOrigin=colorGrid[q0][q1].jfaOrigin;
+               colorGrid[nX][nY].origin=colorGrid[q0][q1].origin;
                jfaSeeds.push([nX,nY]);
              }
 
@@ -333,22 +323,12 @@ function manhattanGradientPaint(){
   }
 }
 
-function sdfPaint(){
-  // console.log(colorGrid);
-  for(let x=0,n1=colorGrid.length;x<n1;x++){
-    for(let y=0,n2=colorGrid[x].length;y<n2;y++){
-      let d=colorGrid[x][y].distance?colorGrid[x][y].distance:distance([x,y],seeds[colorGrid[x][y].origin]);
-      let v=colorGrid[x][y].wave?(255*(d/(0.5*resolutionXy.x/sq))):255;
-      fillSquare(x,y,`rgb(${v},${v},${v})`);
-    }
-  }
-}
 
-function jfaSdf(){
+function euclidGradientPaint(){
   for(let x=0,n1=colorGrid.length;x<n1;x++){
     for(let y=0,n2=colorGrid[x].length;y<n2;y++){
-      let org=colorGrid[x][y].jfaOrigin;
-      // console.log([x,y],colorGrid[x][y].jfaOrigin);
+      let org=colorGrid[x][y].origin;
+      // console.log([x,y],colorGrid[x][y].origin);
       let d=distance([x,y],org);
 
       // let v=colorGrid[x][y].wave?0:(255*(d/(0.5*resolutionXy.x/sq)));
