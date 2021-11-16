@@ -10,26 +10,25 @@ uniform sampler2D u_sampler;
 uniform float u_time;
 uniform float u_pass;
 
-vec2 mapping(){
-  vec2 mapped_coord=gl_FragCoord.xy;
-  mapped_coord-=u_resolution/2.;
-  float scale=500.;
-  float img_width=500.;
-  float img_height=500.;
-  mapped_coord+=vec2(img_width/2.,img_height/2.);
-  mapped_coord = mapped_coord/scale;
-  mapped_coord.y=mapped_coord.y;
-  return mapped_coord;
+vec2 img_size=vec2(500.,500.);
+
+
+vec2 norm(vec2 coord){
+  vec2 uv =(coord.xy-0.5) / img_size.xy;
+  return uv;
 }
 
 
+
+
+
 void main(){
-    float iter = mod(float(u_time),13.0);
 
-    vec2 mapped_coord=mapping();
+    vec2 mapped_coord=norm(gl_FragCoord.xy);
     vec4 texturePixel=texture2D(u_sampler,mapped_coord);
-    float dist=length(texturePixel.rg-mapped_coord)*20.;
-
+    // float dist=length(texturePixel.rg-mapped_coord)*20.;
+    // float dist=length(texturePixel.rg-gl_FragCoord.xy);
+    // texturePixel.rg=norm(texturePixel.rg);
     gl_FragColor=texturePixel;
     // gl_FragColor=vec4(vec3(dist),1.);
 }
