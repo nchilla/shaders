@@ -136,10 +136,13 @@ function buttons(){
       gridReset();
       manhattanGradientPaint();
       break;
-      case 'sdf':
+      case 'euclid-flood':
       gridReset();
-      breadthFirstFlood();
-      sdfPaint();
+      euclidFlood();
+      console.log(colorGrid);
+      jfaSdf();
+      // breadthFirstFlood();
+      // sdfPaint();
       break;
       case 'jump-flood':
       gridReset();
@@ -197,6 +200,61 @@ function breadthFirstFlood(){
 
    // manhattanGradientPaint();
 }
+
+function euclidFlood(){
+  let queue=[...seeds];
+  let wave=2;
+  while(queue.length>0){
+    let newQueue=[];
+    //loop through neigbor x vals
+    for(let i=0,n=queue.length;i<n;i++){
+
+      let bX=queue[i][0];
+      let bY=queue[i][1];
+      for(let x=-1;x<=1;x++){
+        //loop through neigbor y vals
+        for(let y=-1;y<=1;y++){
+          let nX=bX+x;
+          let nY=bY+y;
+
+          //make sure neighbor exists,
+          if(nX>=0&&nX<xCount&&
+             nY>=0&&nY<yCount
+
+          ){
+            //check if it's filled in
+            if(colorGrid[nX][nY].color==0){
+              //if it's not, fill it in
+              colorGrid[nX][nY].color=1;
+              //record when it was filled
+              colorGrid[nX][nY].wave=wave;
+              //record the seed where it originated
+              colorGrid[nX][nY].jfaOrigin=colorGrid[bX][bY].jfaOrigin;
+              //add it to the queue
+              newQueue.push([nX,nY]);
+            }else{
+              let oldDist=distance([nX,nY],colorGrid[nX][nY].jfaOrigin);
+              let newDist=distance([nX,nY],colorGrid[bX][bY].jfaOrigin);
+              if(newDist<oldDist){
+                colorGrid[nX][nY].jfaOrigin=colorGrid[bX][bY].jfaOrigin;
+                newQueue.push([nX,nY]);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    queue=newQueue;
+
+    wave++;
+  }
+
+   // manhattanGradientPaint();
+}
+
+
+
 
 
 
@@ -293,7 +351,8 @@ function jfaSdf(){
       // console.log([x,y],colorGrid[x][y].jfaOrigin);
       let d=distance([x,y],org);
 
-      let v=colorGrid[x][y].wave?0:(255*(d/(0.5*resolutionXy.x/sq)));
+      // let v=colorGrid[x][y].wave?0:(255*(d/(0.5*resolutionXy.x/sq)));
+      let v=255*(d/(0.5*resolutionXy.x/sq));
       fillSquare(x,y,`rgb(${v},${v},${v})`);
       // fillSquare(x,y,`rgb(${d},${d},${d})`);
     }
