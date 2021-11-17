@@ -33,6 +33,7 @@
       </section>
       <section>
         <h2>The challenge</h2>
+        <img src="assets/letterform.png" alt="">
         <!-- figure -->
         <p>What if you have a custom shape, such as a letterform or a brush stroke, that doesn’t conform to an easy mathematical formula? <mark>How do you find out what the closest pixel of the shape is to the point you’re processing?</mark></p>
         <aside class="">
@@ -223,11 +224,20 @@
       </section>
       <section>
         <h2>Break-outs: flood-fill-in-the-blanks</h2>
+        <aside class="">
+          <a href="https://codepen.io/hubblebot/pen/eYEbMdw">ACTIVITY LINK</a>
+        </aside>
+        <hr>
+      </section>
+      <section>
+        <h2>What parts of this are parallelizeable?</h2>
+        <p>One advantage of brute-force is it is completely parallelizeable, despite being very costly.</p>
+        <p>By contrast, our flood fill looks more naturally serial. Each wave depends on the one before to know which pixels need to be iterated over. <i>However,</i> the individual pixels in each wave can be computed all at once.</p>
+        <p>So technically you could optimize flood fill by feeding and re-feeding it through multiple shader passes.</p>
+        <p>This is where the <a href="https://blog.demofox.org/2016/02/29/fast-voronoi-diagrams-and-distance-dield-textures-on-the-gpu-with-the-jump-flooding-algorithm/">jump flood algorithm</a> thrives, since it can fill the entire canvas in just log2(NM) steps, where N and M are the dimensions of an image.</p>
       </section>
 
-      <aside class="">
-        <a href="https://codepen.io/hubblebot/pen/eYEbMdw">ACTIVITY LINK</a>
-      </aside>
+
 
 
 

@@ -70,6 +70,9 @@ function handleRun(){
     case 'flood fill':
     euclidFlood();
     break;
+    case 'jump-flood':
+    jumpFlood();
+    break;
   }
 }
 
@@ -306,7 +309,75 @@ function euclidFlood(){
 
 
 
+function jumpFlood(){
 
+  anims.push(true);
+  let num=anims.length-1;
+
+  let jfaSeeds=[...seeds];
+  let passIndex=0;
+  let n=Math.log2(resolutionXy.x);
+
+  jfLoop();
+  function jfLoop(){
+    let offset=Math.floor(Math.pow(2, (Math.log2(n) - passIndex - 1)));
+    for(let i =0; i<jfaSeeds.length;i++){
+       //iterate through neighboring pixels
+       for(let x=-1;x<=1;x++){
+         for(let y=-1;y<=1;y++){
+           let nX=jfaSeeds[i][0] + x * offset;
+           let nY=jfaSeeds[i][1] + y * offset;
+
+            let q0=jfaSeeds[i][0];
+            let q1=jfaSeeds[i][1]
+           if(nX>=0&&nX<xCount&&nY>=0&&nY<yCount){
+             //check if it's filled in
+             if(colorGrid[nX][nY].color==1){
+               //if it is, compare origin distances
+               // console.log(colorGrid[nX][nY]);
+               let oldSeedDist=distance([nX,nY],colorGrid[nX][nY].origin);
+               let newSeedDist=distance([nX,nY],colorGrid[q0][q1].origin);
+
+               if(oldSeedDist>newSeedDist){
+                 colorGrid[nX][nY].origin=colorGrid[q0][q1].origin;
+                 euclidFillSquare(nX,nY,newSeedDist);
+               }
+
+             }else{
+               //if it's not, fill in and set the origin
+               colorGrid[nX][nY].color=1;
+               colorGrid[nX][nY].origin=colorGrid[q0][q1].origin;
+               let d=distance([nX,nY],colorGrid[q0][q1].origin);
+               euclidFillSquare(nX,nY,d);
+               jfaSeeds.push([nX,nY]);
+             }
+
+
+           }
+
+         }
+       }
+
+    }
+    passIndex++;
+
+    if(passIndex < n){
+      let delay=100/speed;
+      setTimeout(function () {
+        if(anims[num]){
+          window.requestAnimationFrame(jfLoop);
+        }
+
+      }, delay);
+    }
+  }
+
+  // while(passIndex < n){
+  //   // let newqueue;
+  //
+  // }
+
+}
 
 
 function euclidFillSquare(x,y,d){

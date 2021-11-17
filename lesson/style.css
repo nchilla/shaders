@@ -10,7 +10,7 @@ article{
 }
 
 
-a{
+header>a,section>a,aside a{
   font-family: monospace;
   font-size:20px;
   text-align:right;
