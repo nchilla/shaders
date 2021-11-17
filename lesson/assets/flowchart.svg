@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="492.25" height="637.866" viewBox="0 0 492.25 637.866">
+  <g id="Group_12" data-name="Group 12" transform="translate(-368.75 -831)">
+    <path id="Path_1" data-name="Path 1" d="M610.873,1460.224S485.981,1399.9,483.427,1155.448c-.917-87.757,11.459-203.507,36.893-237.083,42.729-42.924,93.574-53.528,93.574-53.528" transform="translate(-114.121 -10.525)" fill="none" stroke="#000" stroke-width="1" opacity="0.497"/>
+    <g id="Rectangle_10" data-name="Rectangle 10" transform="translate(516 831)" fill="#fff" stroke="#000" stroke-width="1">
+      <rect width="210" height="43" rx="21.5" stroke="none"/>
+      <rect x="0.5" y="0.5" width="209" height="42" rx="21" fill="none"/>
+    </g>
+    <g id="Rectangle_15" data-name="Rectangle 15" transform="translate(416 1163)" fill="#fff" stroke="#000" stroke-width="1">
+      <rect width="221" height="43" rx="21.5" stroke="none"/>
+      <rect x="0.5" y="0.5" width="220" height="42" rx="21" fill="none"/>
+    </g>
+    <g id="Rectangle_12" data-name="Rectangle 12" transform="translate(676 965.866)" fill="#fff" stroke="#000" stroke-width="1">
+      <rect width="127" height="43" stroke="none"/>
+      <rect x="0.5" y="0.5" width="126" height="42" fill="none"/>
+    </g>
+    <g id="Rectangle_16" data-name="Rectangle 16" transform="translate(497 1425.866)" fill="#fff" stroke="#000" stroke-width="1">
+      <rect width="148" height="43" stroke="none"/>
+      <rect x="0.5" y="0.5" width="147" height="42" fill="none"/>
+    </g>
+    <g id="Rectangle_13" data-name="Rectangle 13" transform="translate(407 965.866)" fill="#fff" stroke="#000" stroke-width="1">
+      <rect width="243" height="94" stroke="none"/>
+      <rect x="0.5" y="0.5" width="242" height="93" fill="none"/>
+    </g>
+    <g id="Rectangle_14" data-name="Rectangle 14" transform="translate(621 1261.866)" fill="#fff" stroke="#000" stroke-width="1">
+      <rect width="240" height="91" stroke="none"/>
+      <rect x="0.5" y="0.5" width="239" height="90" fill="none"/>
+    </g>
+    <text id="Is_Q_is_filled_in_" data-name="Is Q is filled in?" transform="translate(543 856)" font-size="15" font-family="Courier"><tspan x="0" y="0">Is Q is filled in?</tspan></text>
+    <text id="Is_dist_B_dist_A_" data-name="Is dist B &lt; dist A?" transform="translate(443 1188)" font-size="15" font-family="Courier"><tspan x="0" y="0">Is dist B &lt; dist A?</tspan></text>
+    <text id="Copy_P_s_origin_to_Q_and_add_Q_to_the_queue_for_the_next_wave" data-name="Copy P’s origin to Q and add Q to the queue 
+for the next wave" transform="translate(635 1276.866)" font-size="15" font-family="Courier"><tspan x="0" y="11">Copy P’s origin to Q </tspan><tspan x="0" y="31">and add Q to the queue </tspan><tspan x="0" y="51">for the next wave</tspan></text>
+    <text id="Fill_it_in" data-name="Fill it in" transform="translate(698 991.866)" font-size="15" font-family="Courier"><tspan x="0" y="0">Fill it in</tspan></text>
+    <text id="next_neighbor" data-name="next neighbor" transform="translate(514 1450.866)" font-size="15" font-family="Courier"><tspan x="0" y="0">next neighbor</tspan></text>
+    <text id="Calculate_distances:_A._from_Q_to_Q_s_origin_B._from_Q_to_P_s_origin" data-name="Calculate distances: 
+A. from Q to Q’s origin 
+B. from Q to P’s origin" transform="translate(422 980.866)" font-size="15" font-family="Courier"><tspan x="0" y="11">Calculate distances: </tspan><tspan x="0" y="31">A. from Q to Q’s origin </tspan><tspan x="0" y="51">B. from Q to P’s origin</tspan></text>
+    <text id="YES" transform="translate(514 903.866)" font-size="15" font-family="Courier"><tspan x="0" y="0">YES</tspan></text>
+    <text id="then" transform="translate(439 1106.866)" font-size="15" font-family="Courier"><tspan x="0" y="0">then</tspan></text>
+    <text id="NO" transform="translate(496 1309.879)" font-size="15" font-family="Courier"><tspan x="0" y="0">NO</tspan></text>
+    <text id="then-2" data-name="then" transform="translate(683.94 1387.366)" font-size="15" font-family="Courier"><tspan x="0" y="0">then</tspan></text>
+    <text id="then-3" data-name="then" transform="translate(743 1103.366)" font-size="15" font-family="Courier"><tspan x="0" y="0">then</tspan></text>
+    <text id="YES-2" data-name="YES" transform="translate(649 1215.936)" font-size="15" font-family="Courier"><tspan x="0" y="0">YES</tspan></text>
+    <text id="NO-2" data-name="NO" transform="translate(696.94 903.866)" font-size="15" font-family="Courier"><tspan x="0" y="0">NO</tspan></text>
+    <line id="Line_1" data-name="Line 1" y2="76" transform="matrix(-0.799, -0.602, 0.602, -0.799, 533.641, 947.724)" fill="none" stroke="#000" stroke-width="2"/>
+    <g id="Polygon_1" data-name="Polygon 1" transform="matrix(-0.799, -0.602, 0.602, -0.799, 536.566, 961.208)">
+      <path d="M 20.03265571594238 17.51782035827637 L 0.8680145144462585 17.51782035827637 L 10.45033550262451 0.9965839982032776 L 20.03265571594238 17.51782035827637 Z" stroke="none"/>
+      <path d="M 10.45033550262451 1.99315071105957 L 1.73602294921875 17.01782035827637 L 19.16464805603027 17.01782035827637 L 10.45033550262451 1.99315071105957 M 10.45033550262451 0 L 20.90067481994629 18.01782035827637 L -3.814697265625e-06 18.01782035827637 L 10.45033550262451 0 Z" stroke="none" fill="#000"/>
+    </g>
+    <path id="Polygon_2" data-name="Polygon 2" d="M10.45,0,20.9,18.018H0Z" transform="matrix(0.07, 0.998, -0.998, 0.07, 516.424, 843.108)" opacity="0.497"/>
+    <line id="Line_1-2" data-name="Line 1" x1="24.418" y1="36.198" transform="translate(629.5 1210.5)" fill="none" stroke="#000" stroke-width="2"/>
+    <g id="Polygon_1-2" data-name="Polygon 1" transform="translate(669.79 1250.899) rotate(143)">
+      <path d="M 20.03265571594238 17.51782035827637 L 0.8680145144462585 17.51782035827637 L 10.45033550262451 0.9965839982032776 L 20.03265571594238 17.51782035827637 Z" stroke="none"/>
+      <path d="M 10.45033550262451 1.99315071105957 L 1.73602294921875 17.01782035827637 L 19.16464805603027 17.01782035827637 L 10.45033550262451 1.99315071105957 M 10.45033550262451 0 L 20.90067481994629 18.01782035827637 L -3.814697265625e-06 18.01782035827637 L 10.45033550262451 0 Z" stroke="none" fill="#000"/>
+    </g>
+    <line id="Line_1-3" data-name="Line 1" y1="76" transform="matrix(0.799, -0.602, 0.602, 0.799, 664.121, 887.027)" fill="none" stroke="#000" stroke-width="2"/>
+    <g id="Polygon_1-3" data-name="Polygon 1" transform="matrix(-0.799, 0.602, -0.602, -0.799, 728, 953.288)">
+      <path d="M 20.03264427185059 17.51781845092773 L 0.8680221438407898 17.51781845092773 L 10.45033359527588 0.9965837597846985 L 20.03264427185059 17.51781845092773 Z" stroke="none"/>
+      <path d="M 10.45033359527588 1.99315071105957 L 1.736030578613281 17.01781845092773 L 19.16463661193848 17.01781845092773 L 10.45033359527588 1.99315071105957 M 10.45033359527588 0 L 20.90066337585449 18.01781845092773 L 3.814697265625e-06 18.01781845092773 L 10.45033359527588 0 Z" stroke="none" fill="#000"/>
+    </g>
+    <line id="Line_1-4" data-name="Line 1" y1="213.331" transform="translate(733.94 1022.866)" fill="none" stroke="#000" stroke-width="2"/>
+    <g id="Polygon_1-4" data-name="Polygon 1" transform="translate(744.39 1251.41) rotate(180)">
+      <path d="M 20.03264427185059 17.51782035827637 L 0.8680221438407898 17.51782035827637 L 10.45033359527588 0.9965847134590149 L 20.03264427185059 17.51782035827637 Z" stroke="none"/>
+      <path d="M 10.45033359527588 1.993152618408203 L 1.736030578613281 17.01782035827637 L 19.16463661193848 17.01782035827637 L 10.45033359527588 1.993152618408203 M 10.45033359527588 0 L 20.90066337585449 18.01782035827637 L 3.814697265625e-06 18.01782035827637 L 10.45033359527588 0 Z" stroke="none" fill="#000"/>
+    </g>
+    <line id="Line_1-5" data-name="Line 1" y1="76" transform="translate(487.5 1066.866)" fill="none" stroke="#000" stroke-width="2"/>
+    <g id="Polygon_1-5" data-name="Polygon 1" transform="translate(498.45 1157.146) rotate(180)">
+      <path d="M 20.03264427185059 17.51781845092773 L 0.8680221438407898 17.51781845092773 L 10.45033359527588 0.9965837597846985 L 20.03264427185059 17.51781845092773 Z" stroke="none"/>
+      <path d="M 10.45033359527588 1.99315071105957 L 1.736030578613281 17.01781845092773 L 19.16463661193848 17.01781845092773 L 10.45033359527588 1.99315071105957 M 10.45033359527588 0 L 20.90066337585449 18.01781845092773 L 3.814697265625e-06 18.01781845092773 L 10.45033359527588 0 Z" stroke="none" fill="#000"/>
+    </g>
+    <line id="Line_1-6" data-name="Line 1" x1="38.696" y1="179.758" transform="translate(515.5 1216.5)" fill="none" stroke="#000" stroke-width="2"/>
+    <g id="Polygon_1-6" data-name="Polygon 1" transform="translate(568.851 1408.187) rotate(159)">
+      <path d="M 20.03264427185059 17.51782035827637 L 0.8680221438407898 17.51782035827637 L 10.45033359527588 0.9965856671333313 L 20.03264427185059 17.51782035827637 Z" stroke="none"/>
+      <path d="M 10.45033359527588 1.993152618408203 L 1.736030578613281 17.01782035827637 L 19.16463661193848 17.01782035827637 L 10.45033359527588 1.993152618408203 M 10.45033359527588 1.9073486328125e-06 L 20.90066337585449 18.01782035827637 L 3.814697265625e-06 18.01782035827637 L 10.45033359527588 1.9073486328125e-06 Z" stroke="none" fill="#000"/>
+    </g>
+    <line id="Line_1-7" data-name="Line 1" y1="60.495" transform="translate(682.161 1362.538) rotate(45)" fill="none" stroke="#000" stroke-width="2"/>
+    <g id="Polygon_1-7" data-name="Polygon 1" transform="translate(640.404 1419.075) rotate(-135)">
+      <path d="M 20.03264427185059 17.51782035827637 L 0.8680221438407898 17.51782035827637 L 10.45033359527588 0.9965847134590149 L 20.03264427185059 17.51782035827637 Z" stroke="none"/>
+      <path d="M 10.45033359527588 1.993152618408203 L 1.736030578613281 17.01782035827637 L 19.16463661193848 17.01782035827637 L 10.45033359527588 1.993152618408203 M 10.45033359527588 0 L 20.90066337585449 18.01782035827637 L 3.814697265625e-06 18.01782035827637 L 10.45033359527588 0 Z" stroke="none" fill="#000"/>
+    </g>
+  </g>
+</svg>

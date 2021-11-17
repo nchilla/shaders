@@ -1,0 +1,66 @@
+body{
+  background-color:AliceBlue;
+}
+article{
+  width:500px;
+  margin:auto;
+  font-family: 'Helvetica', sans-serif;
+
+
+}
+
+p,ol{
+  font-family:Helvetica;
+  font-size:18px;
+  line-height:26px;
+}
+
+li{
+  margin-bottom:15px;
+}
+
+li>svg{
+  margin-top:20px;
+}
+
+
+i{
+  font-style: italic;
+}
+
+h1{
+  font-size: 45px;
+  line-height: 50px;
+
+}
+
+section,header{
+  margin-bottom:40px;
+}
+code{
+  background-color: white;
+  border:1px solid black;
+  color: black;
+  padding:20px;
+  display:block;
+  font-size:15px;
+  line-height:20px;
+}
+
+mark{
+  background-color:#b1ffb1;
+}
+
+aside{
+  font-family:monospace;
+  font-size:20px;
+  text-align:center;
+  padding:20px;
+  border:1px solid black;
+  margin:40px 0px;
+  background-color: white;
+}
+
+svg{
+  /* width:100%; */
+}

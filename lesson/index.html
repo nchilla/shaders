@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <article >
+      <header>
+        <h1>Distance fields <br>and flood fill</h1>
+        <hr>
+      </header>
+
+
+      <section>
+        <h2>Distance fields</h2>
+        <p>Distance transforms/fields refer to images where <mark>the value of every pixel is mapped to its distance from the closest ‘obstacle’ or ‘seed’ pixel.</mark></p>
+        <!-- <figure>
+          <img src="" alt="">
+        </figure> -->
+
+        <p>In class we experimented with distance transforms in the form of signed distance fields (SDFs). The ‘signed’ in SDF refers to the distinction between the inside and outside of a shape — in our case, the inside and outside of a circle or rectangle.</p>
+
+        <p>It’s very significant that we used geometric shapes to make distance transforms in GLSL — it meant that they could be calculated in relatively few steps using simple formulas.</p>
+
+        <code>
+          float circle(vec2 frag_coord, float radius) {<br>
+          &nbsp;&nbsp;&nbsp;return length(frag_coord) - radius;<br>
+          }
+        </code>
+        <hr>
+      </section>
+      <section>
+        <h2>The challenge</h2>
+        <!-- figure -->
+        <p>What if you have a custom shape, such as a letterform or a brush stroke, that doesn’t conform to an easy mathematical formula? <mark>How do you find out what the closest pixel of the shape is to the point you’re processing?</mark></p>
+        <aside class="">
+          What is the most straightforward way you can think of to do this?
+        </aside>
+
+        <hr>
+      </section>
+      <section>
+        <h2>The challenge cont.</h2>
+        <p>The method above (either you guessed it or I told you) gets really expensive as you increase the number of seed pixels. <mark>So the ideal would be to find a way to do this that doesn’t require as many steps for each pixel.</mark> </p>
+
+        <hr>
+      </section>
+      <section>
+        <h2>Enter flood fill</h2>
+        <p>Well, sort of. Flood fill itself doesn't solve this problem in a particularly economical way, but it’s a good introduction to the algorithmic principles that go into <i>actually</i> solving it.</p>
+        <p><strong>A single wave of (modded) breadth-first flood fill:</strong></p>
+
+        <ol>
+          <li>Loop through all the pixels currently filled in.</li>
+          <li>For each filled-in pixel P, look at its 8 neighbors.
+            <svg xmlns="http://www.w3.org/2000/svg" width="343" height="343" viewBox="0 0 343 343">
+              <g id="Group_11" data-name="Group 11" transform="translate(-398.5 -294.5)">
+                <rect id="Rectangle_1" data-name="Rectangle 1" width="114" height="114" transform="translate(399 295)" fill="none" stroke="#000" stroke-width="1"/>
+                <rect id="Rectangle_4" data-name="Rectangle 4" width="114" height="114" transform="translate(399 409)" fill="none" stroke="#000" stroke-width="1"/>
+                <rect id="Rectangle_9" data-name="Rectangle 9" width="114" height="114" transform="translate(399 523)" fill="none" stroke="#000" stroke-width="1"/>
+                <rect id="Rectangle_2" data-name="Rectangle 2" width="114" height="114" transform="translate(513 295)" fill="none" stroke="#000" stroke-width="1"/>
+                <rect id="Rectangle_5" data-name="Rectangle 5" width="114" height="114" transform="translate(513 409)" fill="#b1ffb1" stroke="#000" stroke-width="1"/>
+                <rect id="Rectangle_7" data-name="Rectangle 7" width="114" height="114" transform="translate(513 523)" fill="none" stroke="#000" stroke-width="1"/>
+                <rect id="Rectangle_3" data-name="Rectangle 3" width="114" height="114" transform="translate(627 295)" fill="none" stroke="#000" stroke-width="1"/>
+                <rect id="Rectangle_6" data-name="Rectangle 6" width="114" height="114" transform="translate(627 409)" fill="none" stroke="#000" stroke-width="1"/>
+                <rect id="Rectangle_8" data-name="Rectangle 8" width="114" height="114" transform="translate(627 523)" fill="none" stroke="#000" stroke-width="1"/>
+                <g id="Group_3" data-name="Group 3" transform="translate(440 485) rotate(-90)">
+                  <line id="Line_1" data-name="Line 1" y2="76" transform="translate(14 12)" fill="none" stroke="#000" stroke-width="2"/>
+                  <g id="Polygon_1" data-name="Polygon 1">
+                    <path d="M 28.13198089599609 24.5 L 0.8680188059806824 24.5 L 14.5 0.9965841174125671 L 28.13198089599609 24.5 Z" stroke="none"/>
+                    <path d="M 14.5 1.99315071105957 L 1.736026763916016 24 L 27.26397323608398 24 L 14.5 1.99315071105957 M 14.5 0 L 29 25 L 0 25 L 14.5 0 Z" stroke="none" fill="#000"/>
+                  </g>
+                </g>
+                <g id="Group_4" data-name="Group 4" transform="translate(700.666 456) rotate(90)">
+                  <line id="Line_1-2" data-name="Line 1" y2="76" transform="translate(14 12)" fill="none" stroke="#000" stroke-width="2"/>
+                  <g id="Polygon_1-2" data-name="Polygon 1" transform="translate(0 -0.334)">
+                    <path d="M 28.13198089599609 24.5 L 0.8680188059806824 24.5 L 14.5 0.9965841174125671 L 28.13198089599609 24.5 Z" stroke="none"/>
+                    <path d="M 14.5 1.99315071105957 L 1.736026763916016 24 L 27.26397323608398 24 L 14.5 1.99315071105957 M 14.5 0 L 29 25 L 0 25 L 14.5 0 Z" stroke="none" fill="#000"/>
+                  </g>
+                </g>
+                <g id="Group_5" data-name="Group 5" transform="translate(466.366 389.603) rotate(-45)">
+                  <line id="Line_1-3" data-name="Line 1" y2="76" transform="translate(14 12)" fill="none" stroke="#000" stroke-width="2"/>
+                  <g id="Polygon_1-3" data-name="Polygon 1" transform="translate(0 0)">
+                    <path d="M 28.13198089599609 24.5 L 0.8680188059806824 24.5 L 14.5 0.9965841174125671 L 28.13198089599609 24.5 Z" stroke="none"/>
+                    <path d="M 14.5 1.99315071105957 L 1.736026763916016 24 L 27.26397323608398 24 L 14.5 1.99315071105957 M 14.5 0 L 29 25 L 0 25 L 14.5 0 Z" stroke="none" fill="#000"/>
+                  </g>
+                </g>
+                <g id="Group_6" data-name="Group 6" transform="translate(673.634 559.494) rotate(135)">
+                  <line id="Line_1-4" data-name="Line 1" y2="76" transform="translate(14 12)" fill="none" stroke="#000" stroke-width="2"/>
+                  <g id="Polygon_1-4" data-name="Polygon 1" transform="translate(0 0)">
+                    <path d="M 28.13198089599609 24.5 L 0.8680188059806824 24.5 L 14.5 0.9965841174125671 L 28.13198089599609 24.5 Z" stroke="none"/>
+                    <path d="M 14.5 1.99315071105957 L 1.736026763916016 24 L 27.26397323608398 24 L 14.5 1.99315071105957 M 14.5 0 L 29 25 L 0 25 L 14.5 0 Z" stroke="none" fill="#000"/>
+                  </g>
+                </g>
+                <g id="Group_7" data-name="Group 7" transform="translate(486.872 580) rotate(-135)">
+                  <line id="Line_1-5" data-name="Line 1" y2="76" transform="translate(14 12)" fill="none" stroke="#000" stroke-width="2"/>
+                  <g id="Polygon_1-5" data-name="Polygon 1" transform="translate(0 0)">
+                    <path d="M 28.13198089599609 24.5 L 0.8680188059806824 24.5 L 14.5 0.9965841174125671 L 28.13198089599609 24.5 Z" stroke="none"/>
+                    <path d="M 14.5 1.99315071105957 L 1.736026763916016 24 L 27.26397323608398 24 L 14.5 1.99315071105957 M 14.5 0 L 29 25 L 0 25 L 14.5 0 Z" stroke="none" fill="#000"/>
+                  </g>
+                </g>
+                <g id="Group_8" data-name="Group 8" transform="translate(653.128 369.097) rotate(45)">
+                  <line id="Line_1-6" data-name="Line 1" y2="76" transform="translate(14 12)" fill="none" stroke="#000" stroke-width="2"/>
+                  <g id="Polygon_1-6" data-name="Polygon 1" transform="translate(0 0)">
+                    <path d="M 28.13198089599609 24.5 L 0.8680188059806824 24.5 L 14.5 0.9965841174125671 L 28.13198089599609 24.5 Z" stroke="none"/>
+                    <path d="M 14.5 1.99315071105957 L 1.736026763916016 24 L 27.26397323608398 24 L 14.5 1.99315071105957 M 14.5 0 L 29 25 L 0 25 L 14.5 0 Z" stroke="none" fill="#000"/>
+                  </g>
+                </g>
+                <g id="Group_9" data-name="Group 9" transform="translate(585 601) rotate(-180)">
+                  <line id="Line_1-7" data-name="Line 1" y2="76" transform="translate(14 12)" fill="none" stroke="#000" stroke-width="2"/>
+                  <g id="Polygon_1-7" data-name="Polygon 1">
+                    <path d="M 28.13198089599609 24.5 L 0.8680188059806824 24.5 L 14.5 0.9965841174125671 L 28.13198089599609 24.5 Z" stroke="none"/>
+                    <path d="M 14.5 1.99315071105957 L 1.736026763916016 24 L 27.26397323608398 24 L 14.5 1.99315071105957 M 14.5 0 L 29 25 L 0 25 L 14.5 0 Z" stroke="none" fill="#000"/>
+                  </g>
+                </g>
+                <g id="Group_10" data-name="Group 10" transform="translate(556 340.334)">
+                  <line id="Line_1-8" data-name="Line 1" y2="76" transform="translate(14 12)" fill="none" stroke="#000" stroke-width="2"/>
+                  <g id="Polygon_1-8" data-name="Polygon 1" transform="translate(0 -0.334)">
+                    <path d="M 28.13198089599609 24.5 L 0.8680188059806824 24.5 L 14.5 0.9965841174125671 L 28.13198089599609 24.5 Z" stroke="none"/>
+                    <path d="M 14.5 1.99315071105957 L 1.736026763916016 24 L 27.26397323608398 24 L 14.5 1.99315071105957 M 14.5 0 L 29 25 L 0 25 L 14.5 0 Z" stroke="none" fill="#000"/>
+                  </g>
+                </g>
+              </g>
+            </svg>
+
+          </li>
+          <li>For each neighbor pixel Q…
+            <svg xmlns="http://www.w3.org/2000/svg" width="492.25" height="637.866" viewBox="0 0 492.25 637.866" style="transform:translateX(-10%);">
+                <g id="Group_12" data-name="Group 12" transform="translate(-368.75 -831)">
+                  <path id="Path_1" data-name="Path 1" d="M610.873,1460.224S485.981,1399.9,483.427,1155.448c-.917-87.757,11.459-203.507,36.893-237.083,42.729-42.924,93.574-53.528,93.574-53.528" transform="translate(-114.121 -10.525)" fill="none" stroke="#000" stroke-width="1" opacity="0.497"/>
+                  <g id="Rectangle_10" data-name="Rectangle 10" transform="translate(516 831)" fill="#fff" stroke="#000" stroke-width="1">
+                    <rect width="210" height="43" rx="21.5" stroke="none"/>
+                    <rect x="0.5" y="0.5" width="209" height="42" rx="21" fill="none"/>
+                  </g>
+                  <g id="Rectangle_15" data-name="Rectangle 15" transform="translate(416 1163)" fill="#fff" stroke="#000" stroke-width="1">
+                    <rect width="221" height="43" rx="21.5" stroke="none"/>
+                    <rect x="0.5" y="0.5" width="220" height="42" rx="21" fill="none"/>
+                  </g>
+                  <g id="Rectangle_12" data-name="Rectangle 12" transform="translate(676 965.866)" fill="#fff" stroke="#000" stroke-width="1">
+                    <rect width="127" height="43" stroke="none"/>
+                    <rect x="0.5" y="0.5" width="126" height="42" fill="none"/>
+                  </g>
+                  <g id="Rectangle_16" data-name="Rectangle 16" transform="translate(497 1425.866)" fill="#fff" stroke="#000" stroke-width="1">
+                    <rect width="148" height="43" stroke="none"/>
+                    <rect x="0.5" y="0.5" width="147" height="42" fill="none"/>
+                  </g>
+                  <g id="Rectangle_13" data-name="Rectangle 13" transform="translate(407 965.866)" fill="#fff" stroke="#000" stroke-width="1">
+                    <rect width="243" height="94" stroke="none"/>
+                    <rect x="0.5" y="0.5" width="242" height="93" fill="none"/>
+                  </g>
+                  <g id="Rectangle_14" data-name="Rectangle 14" transform="translate(621 1261.866)" fill="#fff" stroke="#000" stroke-width="1">
+                    <rect width="240" height="91" stroke="none"/>
+                    <rect x="0.5" y="0.5" width="239" height="90" fill="none"/>
+                  </g>
+                  <text id="Is_Q_is_filled_in_" data-name="Is Q is filled in?" transform="translate(543 856)" font-size="15" font-family="Courier"><tspan x="0" y="0">Is Q is filled in?</tspan></text>
+                  <text id="Is_dist_B_dist_A_" data-name="Is dist B &lt; dist A?" transform="translate(443 1188)" font-size="15" font-family="Courier"><tspan x="0" y="0">Is dist B &lt; dist A?</tspan></text>
+                  <text id="Copy_P_s_origin_to_Q_and_add_Q_to_the_queue_for_the_next_wave" data-name="Copy P’s origin to Q and add Q to the queue
+              for the next wave" transform="translate(635 1276.866)" font-size="15" font-family="Courier"><tspan x="0" y="11">Copy P’s origin to Q </tspan><tspan x="0" y="31">and add Q to the queue </tspan><tspan x="0" y="51">for the next wave</tspan></text>
+                  <text id="Fill_it_in" data-name="Fill it in" transform="translate(698 991.866)" font-size="15" font-family="Courier"><tspan x="0" y="0">Fill it in</tspan></text>
+                  <text id="next_neighbor" data-name="next neighbor" transform="translate(514 1450.866)" font-size="15" font-family="Courier"><tspan x="0" y="0">next neighbor</tspan></text>
+                  <text id="Calculate_distances:_A._from_Q_to_Q_s_origin_B._from_Q_to_P_s_origin" data-name="Calculate distances:
+              A. from Q to Q’s origin
+              B. from Q to P’s origin" transform="translate(422 980.866)" font-size="15" font-family="Courier"><tspan x="0" y="11">Calculate distances: </tspan><tspan x="0" y="31">A. from Q to Q’s origin </tspan><tspan x="0" y="51">B. from Q to P’s origin</tspan></text>
+                  <text id="YES" transform="translate(514 903.866)" font-size="15" font-family="Courier"><tspan x="0" y="0">YES</tspan></text>
+                  <text id="then" transform="translate(439 1106.866)" font-size="15" font-family="Courier"><tspan x="0" y="0">then</tspan></text>
+                  <text id="NO" transform="translate(496 1309.879)" font-size="15" font-family="Courier"><tspan x="0" y="0">NO</tspan></text>
+                  <text id="then-2" data-name="then" transform="translate(683.94 1387.366)" font-size="15" font-family="Courier"><tspan x="0" y="0">then</tspan></text>
+                  <text id="then-3" data-name="then" transform="translate(743 1103.366)" font-size="15" font-family="Courier"><tspan x="0" y="0">then</tspan></text>
+                  <text id="YES-2" data-name="YES" transform="translate(649 1215.936)" font-size="15" font-family="Courier"><tspan x="0" y="0">YES</tspan></text>
+                  <text id="NO-2" data-name="NO" transform="translate(696.94 903.866)" font-size="15" font-family="Courier"><tspan x="0" y="0">NO</tspan></text>
+                  <line id="Line_1" data-name="Line 1" y2="76" transform="matrix(-0.799, -0.602, 0.602, -0.799, 533.641, 947.724)" fill="none" stroke="#000" stroke-width="2"/>
+                  <g id="Polygon_1" data-name="Polygon 1" transform="matrix(-0.799, -0.602, 0.602, -0.799, 536.566, 961.208)">
+                    <path d="M 20.03265571594238 17.51782035827637 L 0.8680145144462585 17.51782035827637 L 10.45033550262451 0.9965839982032776 L 20.03265571594238 17.51782035827637 Z" stroke="none"/>
+                    <path d="M 10.45033550262451 1.99315071105957 L 1.73602294921875 17.01782035827637 L 19.16464805603027 17.01782035827637 L 10.45033550262451 1.99315071105957 M 10.45033550262451 0 L 20.90067481994629 18.01782035827637 L -3.814697265625e-06 18.01782035827637 L 10.45033550262451 0 Z" stroke="none" fill="#000"/>
+                  </g>
+                  <path id="Polygon_2" data-name="Polygon 2" d="M10.45,0,20.9,18.018H0Z" transform="matrix(0.07, 0.998, -0.998, 0.07, 516.424, 843.108)" opacity="0.497"/>
+                  <line id="Line_1-2" data-name="Line 1" x1="24.418" y1="36.198" transform="translate(629.5 1210.5)" fill="none" stroke="#000" stroke-width="2"/>
+                  <g id="Polygon_1-2" data-name="Polygon 1" transform="translate(669.79 1250.899) rotate(143)">
+                    <path d="M 20.03265571594238 17.51782035827637 L 0.8680145144462585 17.51782035827637 L 10.45033550262451 0.9965839982032776 L 20.03265571594238 17.51782035827637 Z" stroke="none"/>
+                    <path d="M 10.45033550262451 1.99315071105957 L 1.73602294921875 17.01782035827637 L 19.16464805603027 17.01782035827637 L 10.45033550262451 1.99315071105957 M 10.45033550262451 0 L 20.90067481994629 18.01782035827637 L -3.814697265625e-06 18.01782035827637 L 10.45033550262451 0 Z" stroke="none" fill="#000"/>
+                  </g>
+                  <line id="Line_1-3" data-name="Line 1" y1="76" transform="matrix(0.799, -0.602, 0.602, 0.799, 664.121, 887.027)" fill="none" stroke="#000" stroke-width="2"/>
+                  <g id="Polygon_1-3" data-name="Polygon 1" transform="matrix(-0.799, 0.602, -0.602, -0.799, 728, 953.288)">
+                    <path d="M 20.03264427185059 17.51781845092773 L 0.8680221438407898 17.51781845092773 L 10.45033359527588 0.9965837597846985 L 20.03264427185059 17.51781845092773 Z" stroke="none"/>
+                    <path d="M 10.45033359527588 1.99315071105957 L 1.736030578613281 17.01781845092773 L 19.16463661193848 17.01781845092773 L 10.45033359527588 1.99315071105957 M 10.45033359527588 0 L 20.90066337585449 18.01781845092773 L 3.814697265625e-06 18.01781845092773 L 10.45033359527588 0 Z" stroke="none" fill="#000"/>
+                  </g>
+                  <line id="Line_1-4" data-name="Line 1" y1="213.331" transform="translate(733.94 1022.866)" fill="none" stroke="#000" stroke-width="2"/>
+                  <g id="Polygon_1-4" data-name="Polygon 1" transform="translate(744.39 1251.41) rotate(180)">
+                    <path d="M 20.03264427185059 17.51782035827637 L 0.8680221438407898 17.51782035827637 L 10.45033359527588 0.9965847134590149 L 20.03264427185059 17.51782035827637 Z" stroke="none"/>
+                    <path d="M 10.45033359527588 1.993152618408203 L 1.736030578613281 17.01782035827637 L 19.16463661193848 17.01782035827637 L 10.45033359527588 1.993152618408203 M 10.45033359527588 0 L 20.90066337585449 18.01782035827637 L 3.814697265625e-06 18.01782035827637 L 10.45033359527588 0 Z" stroke="none" fill="#000"/>
+                  </g>
+                  <line id="Line_1-5" data-name="Line 1" y1="76" transform="translate(487.5 1066.866)" fill="none" stroke="#000" stroke-width="2"/>
+                  <g id="Polygon_1-5" data-name="Polygon 1" transform="translate(498.45 1157.146) rotate(180)">
+                    <path d="M 20.03264427185059 17.51781845092773 L 0.8680221438407898 17.51781845092773 L 10.45033359527588 0.9965837597846985 L 20.03264427185059 17.51781845092773 Z" stroke="none"/>
+                    <path d="M 10.45033359527588 1.99315071105957 L 1.736030578613281 17.01781845092773 L 19.16463661193848 17.01781845092773 L 10.45033359527588 1.99315071105957 M 10.45033359527588 0 L 20.90066337585449 18.01781845092773 L 3.814697265625e-06 18.01781845092773 L 10.45033359527588 0 Z" stroke="none" fill="#000"/>
+                  </g>
+                  <line id="Line_1-6" data-name="Line 1" x1="38.696" y1="179.758" transform="translate(515.5 1216.5)" fill="none" stroke="#000" stroke-width="2"/>
+                  <g id="Polygon_1-6" data-name="Polygon 1" transform="translate(568.851 1408.187) rotate(159)">
+                    <path d="M 20.03264427185059 17.51782035827637 L 0.8680221438407898 17.51782035827637 L 10.45033359527588 0.9965856671333313 L 20.03264427185059 17.51782035827637 Z" stroke="none"/>
+                    <path d="M 10.45033359527588 1.993152618408203 L 1.736030578613281 17.01782035827637 L 19.16463661193848 17.01782035827637 L 10.45033359527588 1.993152618408203 M 10.45033359527588 1.9073486328125e-06 L 20.90066337585449 18.01782035827637 L 3.814697265625e-06 18.01782035827637 L 10.45033359527588 1.9073486328125e-06 Z" stroke="none" fill="#000"/>
+                  </g>
+                  <line id="Line_1-7" data-name="Line 1" y1="60.495" transform="translate(682.161 1362.538) rotate(45)" fill="none" stroke="#000" stroke-width="2"/>
+                  <g id="Polygon_1-7" data-name="Polygon 1" transform="translate(640.404 1419.075) rotate(-135)">
+                    <path d="M 20.03264427185059 17.51782035827637 L 0.8680221438407898 17.51782035827637 L 10.45033359527588 0.9965847134590149 L 20.03264427185059 17.51782035827637 Z" stroke="none"/>
+                    <path d="M 10.45033359527588 1.993152618408203 L 1.736030578613281 17.01782035827637 L 19.16463661193848 17.01782035827637 L 10.45033359527588 1.993152618408203 M 10.45033359527588 0 L 20.90066337585449 18.01782035827637 L 3.814697265625e-06 18.01782035827637 L 10.45033359527588 0 Z" stroke="none" fill="#000"/>
+                  </g>
+                </g>
+              </svg>
+
+          </li>
+          <li>If there are any items in the new queue, return to step 1 and start over</li>
+
+        </ol>
+
+
+
+
+
+
+        <hr>
+      </section>
+
+    </article>
+  </body>
+</html>

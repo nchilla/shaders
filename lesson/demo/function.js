@@ -197,7 +197,7 @@ function bruteForce(){
           fillSquare(x,y,`rgb(${v},${v},${v})`);
         }
 
-      }, delay*(x+y));
+      }, 0.5*delay*x+0.5*y);
     }
   }
 

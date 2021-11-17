@@ -1,4 +1,10 @@
+body{
+  background-color:AliceBlue;
+}
+
+
 canvas{
+  background-color: white;
   position:fixed;
   top:10px;
   left:230px;
