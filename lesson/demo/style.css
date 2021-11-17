@@ -1,0 +1,51 @@
+canvas{
+  position:fixed;
+  top:10px;
+  left:230px;
+  width:calc(100vw - 250px);
+  height:90vh;
+  border:1px solid black;
+  /* width:500px;
+  height:500px; */
+  z-index:0;
+}
+
+
+.control{
+  position:absolute;
+  z-index:20;
+  top:0;
+  left:0;
+  /* height:100%; */
+  width:200px;
+  padding:10px;
+}
+
+.control div{
+  background-color: white;
+  border:1px solid black;
+  padding:10px;
+  margin-bottom:10px;
+}
+
+
+label{
+  display:block;
+  font-family:monospace;
+  font-size:20px;
+  margin-bottom:5px;
+}
+
+p{
+  margin:2px;
+  margin-top:10px;
+}
+
+figcaption{
+  font-family:monospace;
+  font-size:15px;
+  padding: 5px;
+  padding-top: 0;
+  vertical-align: middle;
+  display: inline-block;
+}

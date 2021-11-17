@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="style.css">
+    <script src="function.js" defer></script>
+</head>
+<body>
+    <canvas width="500" height="500"></canvas>
+    <div class="control">
+      <div class="seeds">
+        <label for="seed-slider">Seeds*</label>
+        <input type="range" id="seed-slider" step='1' name="seed-slider" min="1" max="40" value='10'><figcaption>10</figcaption>
+        <button type="button" name="update-seeds" id='update-seeds'>Clear and randomize</button>
+        <p>*you can also draw directly on page to create more seeds</p>
+      </div>
+      <div class="algorithms">
+        <label for="algorithm-select">Algorithms</label>
+        <select name="algorithm-select" id="algorithm-select">
+          <option value="brute force">brute force</option>
+          <option value="flood fill">flood fill</option>
+        </select>
+        <button type="button" name="run" id='run-algorithm'>Run</button>
+        <p>Animation speed</p>
+        <input type="range" id="speed-slider" step='10' name="speed-slider" min="10" max="100" value='50'><figcaption>50%</figcaption>
+      </div>
+
+    </div>
+</body>
+</html>
