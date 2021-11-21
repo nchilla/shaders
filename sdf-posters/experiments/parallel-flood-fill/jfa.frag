@@ -33,6 +33,12 @@ vec4 load0(vec2 p) {
     return texture2D(u_sampler, uv);
 }
 
+vec4 loadi0(ivec2 p){
+  vec2 uv=vec2(p);
+  uv = (uv-0.5) / img_size.xy;
+  return texture2D(u_sampler, uv);
+}
+
 
 vec4 step_jfa(float pass){
   // vec2 pCoord=(gl_FragCoord.xy-0.5) / img_size.xy;
@@ -41,18 +47,23 @@ vec4 step_jfa(float pass){
   // looking at pixel P:
 
   //offset neighbors according to pass number
-  float offset=exp2(log2(img_width)  - pass - 1.);
+  // float offset=exp2(log2(img_width)  - pass - 1.);
+  int offset= int(exp2(log2(img_width)  - pass));
 
   vec4 rgba=vec4(0.,0.,0.,1.);
   float bestDist=900000.;
+  ivec2 sCoord= ivec2(pCoord+0.5);
+
+
 
     // loop through P and 8 surrounding neighbor pixels
   for(float x = -1.; x <= 1.; x++) {
     for(float y = -1.; y <= 1.; y++) {
-      vec2 nCoord=pCoord;
-      nCoord.x+=x*offset;
-      nCoord.y+=y*offset;
-      vec4 neighbor=load0(nCoord);
+      ivec2 nCoord=sCoord + ivec2(x,y)*offset;
+
+      // nCoord.x+=x*offset;
+      // nCoord.y+=y*offset;
+      vec4 neighbor=loadi0(nCoord);
       neighbor.rg=denorm(neighbor.rg);
 
       vec2 nOrigin=vec2(neighbor.rg);

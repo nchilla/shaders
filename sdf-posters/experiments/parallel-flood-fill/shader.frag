@@ -27,14 +27,22 @@ void main(){
     vec2 mapped_coord=norm(gl_FragCoord.xy);
     vec4 texturePixel=texture2D(u_sampler,mapped_coord);
     // float dist=length(texturePixel.rg-mapped_coord)*20.;
-    // float dist=length(texturePixel.rg*500.-gl_FragCoord.xy);
-    // texturePixel.rg=norm(texturePixel.rg);
 
 
-    // texturePixel.rg=texturePixel.rg;
-    gl_FragColor=texturePixel;
 
+    float dist=length((texturePixel.rg*img_size)-gl_FragCoord.xy)/200.;
+
+    float fill= mod(dist, 0.1) * 10.0;
+    fill = step(0.1, fill);
+    gl_FragColor=vec4(vec3(fill),1.);
 
 
     // gl_FragColor=vec4(vec3(dist),1.);
+
+
+    // gl_FragColor=texturePixel;
+
+
+
+
 }

@@ -31,8 +31,18 @@ window.addEventListener('load',startUp);
 function startUp(){
 
 
-  ctx.font="400px serif";
-  ctx.fillText('A', 100, 400);
+  // ctx.font="400px serif";
+  // ctx.fillText('A', 100, 400);
+
+
+  // ctx.font="100px serif";
+  // ctx.fillText('A', 50, 100);
+  // ctx.fillText('B', 380, 440);
+
+  ctx.font="100px serif";
+  ctx.fillText('It works!', 20, 270);
+  ctx.fillText('Sort of.', 20, 380);
+
 
 
   let vertShaderSrc=fetch('shader.vert').then((response) => {return response.text();});
@@ -135,8 +145,7 @@ function render(){
   passCount++;
 
 
-  // window.requestAnimationFrame(render);
-  // if(passCount<=resolutionXy[0]){
+  // if(passCount<=Math.log2(resolutionXy[0])){
   //   window.requestAnimationFrame(render);
   // }
 }
