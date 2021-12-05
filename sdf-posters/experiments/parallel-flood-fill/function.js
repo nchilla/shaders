@@ -34,14 +34,19 @@ function startUp(){
   // ctx.font="400px serif";
   // ctx.fillText('A', 100, 400);
 
+  ctx.font="400px 'Courier New'";
+  ctx.fillText('A', 120, 400);
 
-  // ctx.font="100px serif";
-  // ctx.fillText('A', 50, 100);
-  // ctx.fillText('B', 380, 440);
 
-  ctx.font="100px serif";
-  ctx.fillText('It works!', 20, 270);
-  ctx.fillText('Sort of.', 20, 380);
+  // ctx.font="200px monospace";
+  // ctx.fillText('A', 40, 160);
+  // ctx.fillText('B', 330, 460);
+  //
+
+  //
+  // ctx.font="120px serif";
+  // ctx.fillText('It works,', 20, 250);
+  // ctx.fillText('sort of.', 20, 380);
 
 
 
@@ -126,9 +131,9 @@ function main(sources){
     }
 
 
-    // window.requestAnimationFrame(render);
+    window.requestAnimationFrame(render);
     // render();
-    document.querySelector('#refresh').addEventListener('click',render);
+    // document.querySelector('#refresh').addEventListener('click',render);
 
 }
 
@@ -145,6 +150,7 @@ function render(){
   passCount++;
 
 
+  window.requestAnimationFrame(render);
   // if(passCount<=Math.log2(resolutionXy[0])){
   //   window.requestAnimationFrame(render);
   // }
@@ -170,12 +176,12 @@ function renderJumpFlood(input,output){
   }
 
 
-
+  let t=(Date.now() - startTime) * .001;
 
 
   gl.uniform1f(jfaProgram.uniforms.pass, passCount);
   gl.uniform2fv(jfaProgram.uniforms.resolution,resolutionXy);
-  gl.uniform1f(jfaProgram.uniforms.time, (Date.now() - startTime) * .001);
+  gl.uniform1f(jfaProgram.uniforms.time, t);
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
 }

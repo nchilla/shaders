@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jump flood posters</title>
+    <link rel="stylesheet" href="clearstyle.css">
+    <link rel="stylesheet" href="style.css">
+    <script defer src="gl.js"></script>
+    <script defer src="function.js"></script>
+</head>
+<body>
+
+  <div id="page-wrap">
+    <section id='figures'>
+      <div id="dom-canvas" class='col'  data-mode='move'>
+        <h2>Input</h2>
+        <div class="controls" id='dom-controls'>
+          <div class="global">
+            <div class="slab" id='tool-table'>
+              <label for="">Tools: </label>
+              <button id='move-tool' data-val='move' title='selection tool' type="button" name="button" class='selected'>⌖</button>
+              <button id='text-tool' data-val='text' title='type tool' type="button" name="button">t</button>
+              <button id='brush-tool' data-val='brush' title='draw tool' type="button" name="button">✎</button>
+            </div>
+            <div class="slab">
+              <label for="">Aspect ratio:</label>
+              <div class="dropdown" >
+                <ul class='noselect' data-select='aspect-ratio'>
+                  <li class='selected' data-value='0.75'>4x3</li>
+                  <li data-value='1'>square</li>
+                  <li data-value='1.3'>8.5x11</li>
+                  <li data-value='1.56'>11x17</li>
+                </ul>
+              </div>
+            </div>
+
+
+
+
+            <!-- <select class="aspect-ratio" name="">
+              <option value="">3x4</option>
+              <option value="">square</option>
+              <option value="">8.5x11</option>
+              <option value="">11x17</option>
+            </select> -->
+          </div>
+          <div class="node-specific">
+            <div class="text-property-panel">
+              <div class="slab">
+                <label for="">Font:</label>
+                <div class="dropdown" >
+                  <ul class='noselect' data-select='font-family'>
+                    <li class='selected' data-value='Courier New'>Courier New</li>
+                    <li data-value='Times'>Times</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="slab">
+                <label for="">Style:</label>
+                <div class="dropdown" >
+                  <ul class='noselect' data-select='font-style'>
+                    <li class='selected' data-value='normal'>normal</li>
+                    <li data-value='italic'>italic</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="slab">
+                <label for="">Weight:</label>
+                <div class="dropdown" >
+                  <ul class='noselect' data-select='font-weight'>
+                    <li class='selected' data-value='400'>regular</li>
+                    <li data-value='600'>bold</li>
+                  </ul>
+                </div>
+              </div>
+
+
+            </div>
+            <div class="brush-property-panel">
+
+            </div>
+          </div>
+
+          <!-- <p>Bobby</p> -->
+        </div>
+        <figure>
+          <canvas  width="500" height="500" data-type='canvas'></canvas>
+          <div id="workspace" data-type='workspace'>
+
+          </div>
+        </figure>
+      </div>
+      <div id="gl-canvas" class='col'>
+        <h2>Output</h2>
+        <div class="controls" id='gl-controls'>
+          <div class="">
+
+          </div>
+            <!-- <p>Bobby</p> -->
+        </div>
+        <figure>
+          <canvas width="500" height="500"></canvas>
+        </figure>
+      </div>
+    </section>
+
+    <!-- <div id="input" class="panel">
+      <canvas  width="500" height="500"></canvas>
+    </div>
+    <div id="output" class="panel">
+      <canvas width="500" height="500"></canvas>
+      <button id="refresh" type="button" name="button">next wave</button>
+    </div> -->
+  </div>
+
+</body>
+</html>

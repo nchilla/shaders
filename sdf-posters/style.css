@@ -1,0 +1,277 @@
+body{
+  font-family:'dejavu-mono';
+
+}
+
+h2{
+  font-family:'vera';
+  width:100%;
+  background-color: white;
+  padding:10px;
+  /* padding-bottom:10px; */
+  font-size:20px;
+  box-sizing:border-box;
+  /* text-align: center; */
+  border-bottom:1px solid black;
+  position:sticky;
+  top: 0;
+  z-index:1000;
+}
+
+label{
+  margin-right:3px;
+}
+
+button{
+  font-size:25px;
+  border:1px dotted black;
+  border-radius:50%;
+  width:30px;
+  height:30px;
+  line-height: 0;
+  display:inline-block;
+  overflow:hidden;
+  margin:0px 3px;
+}
+
+button.selected{
+  background-color: LightGoldenRodYellow;
+}
+
+.dropdown{
+  z-index:0;
+  position:relative;
+  cursor:pointer;
+  height:27px;
+  border:1px dotted black;
+  display:flex;
+  flex-flow:row nowrap;
+  /* padding:7px; */
+  /* padding:0px 7px; */
+}
+
+
+.dropdown.dropped{
+  z-index:100;
+}
+
+.dropdown ul{
+  height:100%;
+  overflow:hidden;
+  display:flex;
+  flex-flow:column nowrap;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  padding-top:7px;
+
+}
+
+li{
+  background-color: white;
+  border:1px dotted black;
+  border-top:0px;
+  padding:7px;
+  /* margin-bottom:7px; */
+  order:2;
+  /* padding-bottom:6px; */
+}
+li.selected{
+  order:0;
+  padding-top:0px;
+  border-left:0px;
+  border-right:0px;
+}
+
+.dropdown.dropped ul{
+  overflow:visible;
+}
+
+
+.dropdown::after{
+  content:'∨';
+  padding:0px 7px;
+  padding-top:7px;
+  border-left:1px dotted black;
+
+}
+
+.slab{
+  display:flex;
+  flex-flow:row nowrap;
+  align-items: center;
+  padding:0px 10px;
+  margin-bottom:7px;
+  /* border-bottom:1px solid black; */
+}
+
+#move-tool{
+  font-size:18px;
+  padding-bottom:3px;
+}
+
+#text-tool{
+  font-size:20px;
+}
+
+#brush-tool{
+  font-size:35px;
+}
+
+
+
+#page-wrap{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  box-sizing: border-box;
+  background-color: lavenderblush;
+
+  --aspect-ratio:0.75;
+}
+
+.controls{
+  background-color: white;
+  min-height:200px;
+  box-sizing: border-box;
+  width:100%;
+  display:flex;
+  flex-flow: row nowrap;
+}
+
+.controls>div{
+  flex:1;
+  padding-top:10px;
+  box-sizing: border-box;
+  /* padding:20px; */
+}
+
+.controls>div:first-child{
+  /* border-right:1px solid grey; */
+}
+
+
+
+
+
+
+#figures{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-flow:row nowrap;
+}
+
+.col{
+  flex:1;
+  border-left:1px solid black;
+  overflow:scroll;
+  display:flex;
+  flex-flow:column nowrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+figure{
+  padding-bottom:calc(var(--aspect-ratio)*50vw);
+  position:relative;
+  width:100%;
+  margin-bottom:100px;
+  /* min-height:100vh; */
+}
+
+#workspace{
+  position:absolute;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+
+#dom-canvas[data-mode='text'] figure{
+  cursor:text;
+}
+
+#dom-canvas[data-mode='brush'] figure{
+  cursor:crosshair;
+}
+
+.node-specific>div{
+  display:none;
+}
+
+#dom-canvas[data-mode='text'] .text-property-panel{
+  /* background-color: rgba(0,0,0,0.1); */
+  /* min-height:50px; */
+  display:block;
+}
+
+#dom-canvas.focus-text .text-property-panel{
+  display:block;
+}
+
+#dom-canvas[data-mode='brush'] .brush-property-panel{
+  /* background-color: rgba(0.1,0,0,0.1);; */
+  /* min-height:50px; */
+  display:block;
+}
+
+
+
+
+.node{
+  position:absolute;
+  opacity:1;
+  transform:translateY(25%);
+  cursor:pointer;
+  color:rgba(0, 0, 0, 0);
+  white-space: pre;
+  /* box-sizing: content-box; */
+}
+
+
+
+.node.focus{
+  cursor:grab;
+  z-index:1000;
+  border:2px dotted rgba(0, 0, 0, 0.5);
+}
+
+.node.drag{
+  cursor:grabbing;
+}
+
+.node.focus::after{
+  content:'|';
+  animation: blink 1s linear infinite;
+  opacity:1;
+  color:black;
+  font-family:arial;
+  font-weight:200;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+canvas{
+  position:absolute;
+  width:100%;
+  height:100%;
+  border-top:1px solid black;
+  border-bottom:1px solid black;
+}
+
+
+
+
+@font-face {
+  font-family: 'vera';
+  src: url('vera.ttf');
+}
+
+@font-face {
+  font-family: 'dejavu-mono';
+  src: url('dejavu-mono.ttf');
+}

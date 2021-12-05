@@ -10,7 +10,7 @@ uniform sampler2D u_sampler;
 uniform float u_time;
 uniform float u_pass;
 
-vec2 img_size=vec2(500.,500.);
+vec2 img_size=u_resolution;
 
 
 vec2 norm(vec2 coord){
@@ -32,7 +32,8 @@ void main(){
 
     float dist=length((texturePixel.rg*img_size)-gl_FragCoord.xy)/200.;
 
-    float fill=dist-u_time*0.1;
+    // float fill=dist-u_time*0.1;
+    float fill=dist;
     fill= mod(fill, 0.1) * 10.0;
     fill = step(0.1, fill);
     gl_FragColor=vec4(vec3(fill),1.);

@@ -10,10 +10,9 @@ uniform float u_time;
 uniform float u_pass;
 
 
-
-float img_width=500.;
-float img_height=500.;
-vec2 img_size=vec2(500.,500.);
+// vec2 img_size=vec2(500.,500.);
+// vec2 img_size=vec2(floor(u_resolution.x),floor(u_resolution.y));
+vec2 img_size=u_resolution;
 
 
 
@@ -46,7 +45,7 @@ vec4 step_jfa(float pass){
   // looking at pixel P:
 
   //offset neighbors according to pass number
-  int offset= int(exp2(log2(img_width)  - pass));
+  int offset= int(exp2(log2(img_size.x)  - pass));
 
   vec4 rgba=vec4(0.,0.,0.,1.);
   float bestDist=900000.;
