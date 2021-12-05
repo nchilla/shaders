@@ -22,13 +22,25 @@ const inputs=[
   document.querySelector('#layer2')
 ];
 
+const ctx=[
+  inputs[0].getContext('2d'),
+  inputs[1].getContext('2d'),
+  inputs[2].getContext('2d')
+]
+
+const activeLayers=[
+  true,
+  false,
+  false
+]
+
 const sizeSlider=document.querySelector('input[type="range"]');
 const sizeInput=document.querySelector('input[name="size"]');
 
 let mode='move';
 
-const ctx=inputs[0].getContext('2d');
-ctx.imageSmoothingEnabled = false;
+// const ctx=inputs[0].getContext('2d');
+// ctx.imageSmoothingEnabled = false;
 const output = document.querySelector('#gl-canvas canvas');
 
 
@@ -118,8 +130,6 @@ class TextItem{
     this.node.style.bottom=`calc(100% - ${norm(this.position[1])}px)`
 
 
-    // this.position[1]+'px';
-
   }
 
   focus(){
@@ -139,9 +149,14 @@ class TextItem{
 
   updateCanvas(){
     // ctx.font="400px 'Courier New'";
-    ctx.font=`${this.font_weight} ${this.font_style} ${norm(this.font_size)}px '${this.font_family}'`;
 
-    ctx.fillText(this.value, norm(this.position[0]), norm(this.position[1]));
+    ctx[this.layer].font=`${this.font_weight} ${this.font_style} ${norm(this.font_size)}px '${this.font_family}'`;
+    ctx[this.layer].fillText(this.value, norm(this.position[0]), norm(this.position[1]));
+    activeLayers[this.layer]=true;
+
+    // ctx[0].font=`${this.font_weight} ${this.font_style} ${norm(this.font_size)}px '${this.font_family}'`;
+
+    // ctx[0].fillText(this.value, norm(this.position[0]), norm(this.position[1]));
   }
 
 }
@@ -448,10 +463,10 @@ function setUpListeners(){
 function draw(){
   if(resolutionUpdate){
     refreshCanvas();
-    shader.resolution_update(inputs[0],gl,resolution,{test:1});
+    shader.resolution_update(inputs,gl,resolution,{test:1});
     resolutionUpdate=false;
   }else if(displayUpdate){
-    shader.display_update(inputs[0],gl);
+    shader.display_update(inputs,gl,activeLayers);
     displayUpdate=false;
   }
 
@@ -462,7 +477,12 @@ function draw(){
 
 function refreshCanvas(){
   //loop through all the text items and draw them
-  ctx.clearRect(0, 0, resolution[0],resolution[1]);
+  for(let i = 0; i<ctx.length;i++){
+    ctx[i].clearRect(0, 0, resolution[0],resolution[1]);
+    activeLayers[i]=false;
+  }
+
+  // ctx[0].clearRect(0, 0, resolution[0],resolution[1]);
 
   items.forEach((item, i) => {
     item.update();
@@ -485,11 +505,18 @@ window.addEventListener('resize',resolutionChange);
 
 function resolutionChange(){
   console.log('updating resolution');
-  inputs[0].width=inputs[0].offsetWidth;
-  inputs[0].height=inputs[0].offsetHeight;
-  output.width=output.offsetWidth;
-  output.height=output.offsetHeight;
+  document.querySelectorAll('canvas').forEach((item, i) => {
+    item.width=inputs[0].offsetWidth;
+    item.height=inputs[0].offsetHeight;
+  });
   resolution[0]=inputs[0].width;
   resolution[1]=inputs[0].height;
+
+  // inputs[0].width=inputs[0].offsetWidth;
+  // inputs[0].height=inputs[0].offsetHeight;
+  // output.width=output.offsetWidth;
+  // output.height=output.offsetHeight;
+  // resolution[0]=inputs[0].width;
+  // resolution[1]=inputs[0].height;
   resolutionUpdate=true;
 }

@@ -51,6 +51,11 @@ class Shader {
       this.load_canvas_texture(gl, inputs[2]),
     ];
 
+    this.texture_storage=[
+      this.declare_texture(),
+      this.declare_texture(),
+      this.declare_texture()
+    ]
 
     this.jfa_storage=this.declare_texture();
     this.jfa_alt_storage=this.declare_texture();
@@ -73,7 +78,9 @@ class Shader {
 
   render(){
     this.pass=0;
-    while(this.pass<=Math.log2(this.resolution[0])){
+    const passMetric=this.resolution[0]>this.resolution[1]?this.resolution[0]:this.resolution[1];
+
+    while(this.pass<=Math.log2(passMetric)){
       this.render_jump_flood();
       this.pass++;
     }
@@ -131,7 +138,13 @@ class Shader {
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   }
 
-  display_update(inputs, gl){
+  display_update(inputs, gl, active){
+
+    // for(var i = 0; i<inputs.length; i++){
+    //   if(active[i]){
+    //     this.canvas_data[i]=this.load_canvas_texture(gl, inputs[i])
+    //   };
+    // }
 
     this.canvas_data=[
       this.load_canvas_texture(gl, inputs[0]),
@@ -139,7 +152,6 @@ class Shader {
       this.load_canvas_texture(gl, inputs[2]),
     ];
 
-    // this.canvas_data=this.load_canvas_texture(gl, input);
   }
 
 
@@ -148,7 +160,7 @@ class Shader {
     this.canvas_data=[
       this.load_canvas_texture(gl, inputs[0]),
       this.load_canvas_texture(gl, inputs[1]),
-      this.load_canvas_texture(gl, inputs[2]),
+      this.load_canvas_texture(gl, inputs[2])
     ];
     this.jfa_storage=this.declare_texture();
     this.jfa_alt_storage=this.declare_texture();
