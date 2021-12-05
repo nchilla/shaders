@@ -18,7 +18,8 @@
 const composingColumn=document.querySelector('#dom-canvas');
 const input = document.querySelector('#dom-canvas canvas');
 
-
+const sizeSlider=document.querySelector('input[type="range"]');
+const sizeInput=document.querySelector('input[name="size"]');
 
 let mode='move';
 
@@ -157,6 +158,9 @@ function updateTextPanel(obj){
   updateDropdown(fontStyle,obj.font_style);
   const fontWeight=document.querySelector('ul[data-select="font-weight"]');
   updateDropdown(fontWeight,obj.font_weight);
+  sizeInput.value=obj.font_size;
+  sizeSlider.value=obj.font_size;
+
 }
 
 function updateDropdown(dropdown,value){
@@ -359,9 +363,43 @@ function setUpListeners(){
     }
   })
 
+  let typingInField=false;
+  document.querySelectorAll('input').forEach((item, i) => {
+    item.addEventListener('focusin',function(){
+      typingInField=true;
+    })
+  });
+
+  document.querySelectorAll('input').forEach((item, i) => {
+    item.addEventListener('focusout',function(){
+      typingInField=false;
+    })
+  });
+
+
+  sizeSlider.addEventListener('change',function(){
+    sizeInput.value=sizeSlider.value;
+    updateFontSize(sizeSlider.value)
+
+  })
+  sizeInput.addEventListener('input',function(){
+    sizeSlider.value=sizeInput.value;
+    updateFontSize(sizeInput.value)
+  })
+
+  function updateFontSize(val){
+    if(focus.on){
+      focus.item.font_size=parseInt(val);
+      displayUpdate=true;
+      refreshCanvas();
+    }
+    fontData.font_size=parseInt(val);
+  }
+
+
 
   window.addEventListener('keydown',function(){
-    if(focus.on){
+    if(focus.on&&!typingInField){
       // const node=document.querySelector(`.node[data-id="${focus.id}"]`);
       let item=focus.item;
       if(event.key.length<2){

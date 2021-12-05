@@ -18,6 +18,12 @@ h2{
   z-index:1000;
 }
 
+h3{
+  font-weight:600;
+  margin:10px;
+
+}
+
 label{
   margin-right:3px;
 }
@@ -264,14 +270,114 @@ canvas{
 }
 
 
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+input[type='number'],input[type='number']:focus {
+  border: none;
+  outline: none;
+  height:100%;
+  /* background-color: var(--bg3); */
+  background-color: rgba(0,0,0,0.1);
+  /* font-size:1rem;
+  line-height:1.3rem; */
+  height:27px;
+  font-size:16px;
+  font-family: 'dejavu-mono';
+  /* border:1px dotted black; */
+}
+
+input[type='range']{
+  flex:1;
+  margin-left:10px;
+}
+
+input[type=range]{
+    background-color: rgba(255,255,255,0) !important;
+    -webkit-appearance: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    margin-top: 4px;
+    height: 1px;
+    background-color: black;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    cursor:grab;
+
+    height:10px;
+    margin-top:-4px;
+    border-radius: 50%;
+    width:10px;
+    background-color: black;
+    -webkit-appearance: none;
+    border: none;
+
+}
+input[type=range]::-webkit-slider-thumb:active{
+  cursor:grabbing;
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+  margin-top: 4px;
+  height: 1px;
+  background-color:black;
+}
+input[type=range]::-moz-focus-outer {
+    border: 0;
+}
+
+/** FF*/
+input[type="range"]::-moz-range-progress {
+  background-color:black;
+}
+input[type="range"]::-moz-range-track {
+  background-color:black;
+}
+input[type="range"]::-moz-range-thumb{
+  cursor:grab;
+  height:10px;
+  margin-top:-4px;
+  border-radius: 50%;
+  width:10px;
+  background-color: black;
+  -webkit-appearance: none;
+  border: none;
+}
+input[type="range"]::-moz-range-thumb:active{
+  cursor:grabbing;
+}
+
+
+
 
 
 @font-face {
   font-family: 'vera';
-  src: url('vera.ttf');
+  src: url('assets/vera.ttf');
 }
 
 @font-face {
   font-family: 'dejavu-mono';
-  src: url('dejavu-mono.ttf');
+  src: url('assets/dejavu-mono.ttf');
+}
+
+@font-face {
+  font-family: 'dejavu-mono';
+  font-weight: 600;
+  src: url('assets/dejavu-mono-bold.ttf');
 }
