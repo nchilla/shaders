@@ -35,16 +35,6 @@
                 </ul>
               </div>
             </div>
-
-
-
-
-            <!-- <select class="aspect-ratio" name="">
-              <option value="">3x4</option>
-              <option value="">square</option>
-              <option value="">8.5x11</option>
-              <option value="">11x17</option>
-            </select> -->
           </div>
           <div class="node-specific">
             <div class="text-property-panel">
@@ -84,6 +74,16 @@
                   </ul>
                 </div>
               </div>
+              <div class="slab">
+                <label class='noselect' for="">Layer:</label>
+                <div class="dropdown" >
+                  <ul class='noselect' data-select='font-layer'>
+                    <li class='selected' data-value='0'>0</li>
+                    <li data-value='1'>1</li>
+                    <li data-value='2'>2</li>
+                  </ul>
+                </div>
+              </div>
 
 
 
@@ -96,7 +96,9 @@
           <!-- <p>Bobby</p> -->
         </div>
         <figure>
-          <canvas  width="500" height="500" data-type='canvas'></canvas>
+          <canvas id='layer0' width="500" height="500" data-type='canvas'></canvas>
+          <canvas id='layer1'  width="500" height="500" data-type='canvas'></canvas>
+          <canvas id='layer2'  width="500" height="500" data-type='canvas'></canvas>
           <div id="workspace" data-type='workspace'>
 
           </div>

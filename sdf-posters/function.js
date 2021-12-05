@@ -16,14 +16,18 @@
 
 
 const composingColumn=document.querySelector('#dom-canvas');
-const input = document.querySelector('#dom-canvas canvas');
+const inputs=[
+  document.querySelector('#layer0'),
+  document.querySelector('#layer1'),
+  document.querySelector('#layer2')
+];
 
 const sizeSlider=document.querySelector('input[type="range"]');
 const sizeInput=document.querySelector('input[name="size"]');
 
 let mode='move';
 
-const ctx=input.getContext('2d');
+const ctx=inputs[0].getContext('2d');
 ctx.imageSmoothingEnabled = false;
 const output = document.querySelector('#gl-canvas canvas');
 
@@ -35,7 +39,8 @@ const fontData={
   font_family:'Courier New',
   font_size:50,
   font_style:'normal',
-  font_weight:400
+  font_weight:400,
+  layer:0
 }
 
 const focus={
@@ -51,7 +56,7 @@ const gl=output.getContext('webgl');
 
 
 //uniforms
-const resolution=[input.width,input.height];
+const resolution=[inputs[0].width,inputs[0].height];
 const mouse=[0,0];
 var passCount=0;
 
@@ -73,7 +78,7 @@ class TextItem{
     this.font_size=fontData.font_size;
     this.font_style=fontData.font_style;
     this.font_weight=fontData.font_weight;
-    this.layer=0;
+    this.layer=fontData.layer;
     this.id=id;
 
     focus.on=true;
@@ -158,6 +163,9 @@ function updateTextPanel(obj){
   updateDropdown(fontStyle,obj.font_style);
   const fontWeight=document.querySelector('ul[data-select="font-weight"]');
   updateDropdown(fontWeight,obj.font_weight);
+  const fontLayer=document.querySelector('ul[data-select="font-layer"]');
+  updateDropdown(fontLayer,obj.layer);
+
   sizeInput.value=obj.font_size;
   sizeSlider.value=obj.font_size;
 
@@ -198,7 +206,7 @@ window.addEventListener('load',function(){
 
   Promise.all([vert_shader_src,jfa_shader_src,frag_shader_src]).then((values) => {
       let effects={test:1};
-      shader=new Shader(input, gl, resolution, effects, values);
+      shader=new Shader(inputs, gl, resolution, effects, values);
       window.requestAnimationFrame(draw);
   });
 })
@@ -335,6 +343,14 @@ function setUpListeners(){
         }
         fontData.font_weight=parseInt(item.dataset.value);
         break;
+        case 'font-layer':
+        if(focus.on){
+          focus.item.layer=parseInt(item.dataset.value);
+          displayUpdate=true;
+          refreshCanvas();
+        }
+        fontData.layer=parseInt(item.dataset.value);
+        break;
       }
 
       // item.classList.toggle('dropped');
@@ -432,10 +448,10 @@ function setUpListeners(){
 function draw(){
   if(resolutionUpdate){
     refreshCanvas();
-    shader.resolution_update(input,gl,resolution,{test:1});
+    shader.resolution_update(inputs[0],gl,resolution,{test:1});
     resolutionUpdate=false;
   }else if(displayUpdate){
-    shader.display_update(input,gl);
+    shader.display_update(inputs[0],gl);
     displayUpdate=false;
   }
 
@@ -446,7 +462,7 @@ function draw(){
 
 function refreshCanvas(){
   //loop through all the text items and draw them
-  ctx.clearRect(0, 0, input.width, input.height);
+  ctx.clearRect(0, 0, resolution[0],resolution[1]);
 
   items.forEach((item, i) => {
     item.update();
@@ -469,11 +485,11 @@ window.addEventListener('resize',resolutionChange);
 
 function resolutionChange(){
   console.log('updating resolution');
-  input.width=input.offsetWidth;
-  input.height=input.offsetHeight;
+  inputs[0].width=inputs[0].offsetWidth;
+  inputs[0].height=inputs[0].offsetHeight;
   output.width=output.offsetWidth;
   output.height=output.offsetHeight;
-  resolution[0]=input.width;
-  resolution[1]=input.height;
+  resolution[0]=inputs[0].width;
+  resolution[1]=inputs[0].height;
   resolutionUpdate=true;
 }

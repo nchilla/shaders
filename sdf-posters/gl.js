@@ -1,5 +1,5 @@
 class Shader {
-  constructor(input, gl, resolution, effects, sources) {
+  constructor(inputs, gl, resolution, effects, sources) {
     this.resolution=resolution;
     this.start_time= Date.now();
     this.pass=0;
@@ -43,7 +43,15 @@ class Shader {
       }
     }
 
-    this.canvas_data=this.load_canvas_texture(gl, input);
+    // this.canvas_data=this.load_canvas_texture(gl, input);
+
+    this.canvas_data=[
+      this.load_canvas_texture(gl, inputs[0]),
+      this.load_canvas_texture(gl, inputs[1]),
+      this.load_canvas_texture(gl, inputs[2]),
+    ];
+
+
     this.jfa_storage=this.declare_texture();
     this.jfa_alt_storage=this.declare_texture();
 
@@ -90,7 +98,7 @@ class Shader {
       gl.bindTexture(gl.TEXTURE_2D, input_buffer);
       gl.uniform1i(this.jfa.uniforms.sampler, 0);
     }else{
-      gl.bindTexture(gl.TEXTURE_2D, this.canvas_data);
+      gl.bindTexture(gl.TEXTURE_2D, this.canvas_data[0]);
       gl.uniform1i(this.jfa.uniforms.sampler, 0);
     }
 
@@ -123,14 +131,25 @@ class Shader {
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   }
 
-  display_update(input, gl){
-    this.canvas_data=this.load_canvas_texture(gl, input);
+  display_update(inputs, gl){
+
+    this.canvas_data=[
+      this.load_canvas_texture(gl, inputs[0]),
+      this.load_canvas_texture(gl, inputs[1]),
+      this.load_canvas_texture(gl, inputs[2]),
+    ];
+
+    // this.canvas_data=this.load_canvas_texture(gl, input);
   }
 
 
-  resolution_update(input, gl, resolution, effects){
+  resolution_update(inputs, gl, resolution, effects){
     this.resolution=resolution;
-    this.canvas_data=this.load_canvas_texture(gl, input);
+    this.canvas_data=[
+      this.load_canvas_texture(gl, inputs[0]),
+      this.load_canvas_texture(gl, inputs[1]),
+      this.load_canvas_texture(gl, inputs[2]),
+    ];
     this.jfa_storage=this.declare_texture();
     this.jfa_alt_storage=this.declare_texture();
   }
