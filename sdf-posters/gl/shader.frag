@@ -41,12 +41,23 @@ float trimTransform(vec4 texturePixel,float spread){
 
 
 
-float e_topograph(vec4 texturePixel,float spread){
-  float dist=length((texturePixel.rg*u_resolution)-gl_FragCoord.xy)/200.;
+float e_topograph(float dist,float spread){
   float fill= mod(dist, u_resolution.x/5000.) * 10.0;
   fill = step(0.1, fill+0.02);
   float edge=step(spread/u_resolution.x,dist);
   fill=mix(fill,1.,edge);
+  float innerEdge=step(0.01,dist);
+  fill=mix(0.,fill,innerEdge);
+  return fill;
+}
+
+float e_spiky(float dist,float spread, float angle){
+  float fill =mod(angle, u_resolution.x/2000.)*5.;
+  fill = step(0.1, fill*dist);
+  float edge=step(spread/u_resolution.x,dist);
+  fill=mix(fill,1.,edge);
+  float innerEdge=step(0.01,dist);
+  fill=mix(0.,fill,innerEdge);
   return fill;
 }
 
@@ -78,8 +89,13 @@ void main(){
     vec3 layers[3];
     for(int i=0;i<3;++i){
       layers[i]=vec3(1.);
+      vec2 scaledCoord=samples[i].rg*u_resolution;
+      float dist=length(scaledCoord.xy-gl_FragCoord.xy)/200.;
+      float angle=atan((scaledCoord.y-gl_FragCoord.y)/(scaledCoord.x-gl_FragCoord.x));
       if(u_effects[i]==0.){
-        layers[i]=mix(u_colors[i],vec3(1.),e_topograph(samples[i],u_spreads[i]));
+        layers[i]=mix(u_colors[i],vec3(1.),e_topograph(dist,u_spreads[i]));
+      }else if(u_effects[i]==1.){
+        layers[i]=mix(u_colors[i],vec3(1.),e_spiky(dist,u_spreads[i],angle));
       }
       layers[i]=mix(layers[i],vec3(1.),u_active[i]);
 
@@ -101,30 +117,14 @@ void main(){
       if(u_mixer==0.){
         rgb=f_multiply(layers[0],layers[1],layers[2]);
       }
-      // rgb=vec3(1.);
     }
 
 
 
-    // vec4 l0=texture2D(u_sampler,mapped_coord);
-    // vec4 l1=texture2D(u_sampler1,mapped_coord);
-    // vec4 l2=texture2D(u_sampler2,mapped_coord);
 
-    // vec3 g0=mix(u_colors[0],vec3(1.),topograph(l0,u_spreads[0]));
-    // vec3 g0=mix(u_colors[0],vec3(1.),clamp(dist(l0),0.,u_spreads[0]/100.));
-    // vec3 g1=mix(vec3(1.),u_colors[1],dist(l1));
-    // vec3 g2=mix(vec3(1.),u_colors[2],dist(l2));
-    // vec3 rgb=g0;
     gl_FragColor=vec4(rgb,1.);
 
-    // gl_FragColor=vec4(vec3(u_spreads[0]),1.);
 
-    // float r=mix(topograph(l0),1.,u_active.x);
-    // float g=mix(topograph(l1),1.,u_active.y);
-    // float b=mix(topograph(l2),1.,u_active.z);
-    // gl_FragColor=vec4(r,g,b,1.);
-
-    // gl_FragColor=vec4(u_colors[0],1.);
 
 
 

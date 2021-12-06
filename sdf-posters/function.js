@@ -213,20 +213,24 @@ function updateTextPanel(obj){
 }
 
 
-function updateLayerPanel(i){
+function updateLayerPanel(ind){
+  if(ind<4){
+    updateDropdown(document.querySelector('ul[data-select="effect"]'),outputData.layers[ind].effect);
+    numberFieldValue(document.querySelector('.number-field[data-for="spread"]'),outputData.layers[ind].spread);
+    document.querySelectorAll('#color-pick input').forEach((item, i) => {
+      item.value=outputData.colors[outputData.layer][i]
+      document.querySelector('.swatch').style.setProperty('--'+item.name, outputData.colors[outputData.layer][i]);
+    });
+  }
   // const effectDrop=document.querySelector('ul[data-select="effect"]');
-  updateDropdown(document.querySelector('ul[data-select="effect"]'),outputData.layers[i].effect);
-  numberFieldValue(document.querySelector('.number-field[data-for="spread"]'),outputData.layers[i].spread);
-  document.querySelectorAll('#color-pick input').forEach((item, i) => {
-    item.value=outputData.colors[outputData.layer][i]
-    document.querySelector('.swatch').style.setProperty('--'+item.name, outputData.colors[outputData.layer][i]);
-  });
+
 
 
 }
 
 function switchLayer(ind){
   outputData.layer=ind;
+  document.querySelector('#gl-canvas').dataset.layer=ind;
   updateLayerPanel(ind)
   document.querySelectorAll('#which-layer li').forEach((item, i) => {
     if(item.dataset.value==ind){
@@ -271,6 +275,9 @@ window.addEventListener('load',function(){
 
 
   addTextItem(170,200);
+
+  updateTextPanel(items[0])
+  switchLayer(outputData.layer)
 
   setUpListeners();
 
@@ -543,9 +550,9 @@ function setUpListeners(){
     if(focus.on){
       focus.item.font_size=parseInt(val);
       displayUpdate=true;
-      refreshCanvas();
     }
     fontData.font_size=parseInt(val);
+    refreshCanvas();
   }
 
 
