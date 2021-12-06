@@ -42,7 +42,12 @@ class Shader {
         sampler2:gl.getUniformLocation(shader_program, 'u_sampler2'),
         pass:gl.getUniformLocation(shader_program, 'u_pass'),
         time:gl.getUniformLocation(shader_program, "u_time"),
-        layers_active:gl.getUniformLocation(shader_program, "active")
+        layers_active:gl.getUniformLocation(shader_program, "u_active"),
+        layer_view:gl.getUniformLocation(shader_program, "u_layer"),
+        mixer:gl.getUniformLocation(shader_program, "u_mixer"),
+        colors:gl.getUniformLocation(shader_program, "u_colors"),
+        effects:gl.getUniformLocation(shader_program, "u_effects"),
+        spreads:gl.getUniformLocation(shader_program, "u_spreads")
       }
     }
 
@@ -81,7 +86,7 @@ class Shader {
 
   }
 
-  render(active){
+  render(active,effects){
 
     const passMetric=this.resolution[0]>this.resolution[1]?this.resolution[0]:this.resolution[1];
 
@@ -97,7 +102,7 @@ class Shader {
     this.pass-=1;
 
 
-    this.render_poster(active);
+    this.render_poster(active,effects);
 
 
   }
@@ -137,7 +142,7 @@ class Shader {
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   }
 
-  render_poster(active){
+  render_poster(active,effects){
     // let input_buffer=this.pass%2==0?this.jfa_alt_storage:this.jfa_storage;
     // let input_buffer=this.texture_storage[0];
     gl.useProgram(this.shader.program);
@@ -167,7 +172,14 @@ class Shader {
 
     gl.uniform1f(this.shader.uniforms.pass, this.pass);
     gl.uniform2fv(this.shader.uniforms.resolution,this.resolution);
-    gl.uniform3fv(this.shader.uniforms.layers_active,active.map(a=>a?0:1));
+    gl.uniform1fv(this.shader.uniforms.layers_active,active.map(a=>a?0:1));
+
+    gl.uniform1i(this.shader.uniforms.layer_view,effects.layer);
+    gl.uniform1f(this.shader.uniforms.mixer,effects.mixer);
+    gl.uniform3fv(this.shader.uniforms.colors,effects.colors.map(a=>[a[0]/255,a[1]/255,a[2]/255]).flat());
+    gl.uniform1fv(this.shader.uniforms.effects, [effects.layers[0].effect,effects.layers[1].effect,effects.layers[2].effect]);
+    gl.uniform1fv(this.shader.uniforms.spreads, [effects.layers[0].spread,effects.layers[1].spread,effects.layers[2].spread]);
+    // console.log([effects.layers[0].spread,effects.layers[1].spread,effects.layers[2].spread])
     gl.uniform1f(this.shader.uniforms.time, (Date.now() - this.start_time) * .001);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 

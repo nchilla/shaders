@@ -34,6 +34,27 @@ const activeLayers=[
   false
 ]
 
+const outputData={
+  layer:4,
+  mixer:0,
+  colors:[[0,0,0],[0,0,0],[0,0,0]],
+  layers:[
+    {
+      effect:0,
+      spread:500
+    },
+    {
+      effect:0,
+      spread:500
+    },
+    {
+      effect:0,
+      spread:500
+    }
+  ]
+}
+
+
 const sizeSlider=document.querySelector('input[type="range"]');
 const sizeInput=document.querySelector('input[name="size"]');
 
@@ -181,10 +202,49 @@ function updateTextPanel(obj){
   const fontLayer=document.querySelector('ul[data-select="font-layer"]');
   updateDropdown(fontLayer,obj.layer);
 
-  sizeInput.value=obj.font_size;
-  sizeSlider.value=obj.font_size;
+  // switchLayer(obj.layer)
+
+  const fontSize=document.querySelector('.number-field[data-for="font-size"]');
+  numberFieldValue(fontSize,obj.font_size)
+  //
+  // sizeInput.value=obj.font_size;
+  // sizeSlider.value=obj.font_size;
 
 }
+
+
+function updateLayerPanel(i){
+  // const effectDrop=document.querySelector('ul[data-select="effect"]');
+  updateDropdown(document.querySelector('ul[data-select="effect"]'),outputData.layers[i].effect);
+  numberFieldValue(document.querySelector('.number-field[data-for="spread"]'),outputData.layers[i].spread);
+  document.querySelectorAll('#color-pick input').forEach((item, i) => {
+    item.value=outputData.colors[outputData.layer][i]
+    document.querySelector('.swatch').style.setProperty('--'+item.name, outputData.colors[outputData.layer][i]);
+  });
+
+
+}
+
+function switchLayer(ind){
+  outputData.layer=ind;
+  updateLayerPanel(ind)
+  document.querySelectorAll('#which-layer li').forEach((item, i) => {
+    if(item.dataset.value==ind){
+      item.classList.add('selected');
+    }else{
+      item.classList.remove('selected');
+    }
+  });
+
+}
+
+
+
+function numberFieldValue(field,val){
+  field.querySelector('input[type="number"]').value=val;
+  field.querySelector('input[type="range"]').value=val;
+}
+
 
 function updateDropdown(dropdown,value){
   dropdown.querySelectorAll('li').forEach((item, i) => {
@@ -220,8 +280,8 @@ window.addEventListener('load',function(){
   refreshCanvas();
 
   Promise.all([vert_shader_src,jfa_shader_src,frag_shader_src]).then((values) => {
-      let effects={test:1};
-      shader=new Shader(inputs, gl, resolution, effects, values);
+      // let effects={test:1};
+      shader=new Shader(inputs, gl, resolution, outputData, values);
       window.requestAnimationFrame(draw);
   });
 })
@@ -241,6 +301,7 @@ function setUpListeners(){
     switch(event.target.dataset.type){
       case 'node':
       let item=items.find(a=>a.id==event.target.dataset.id);
+      cleanUp();
       item.focus();
       break;
       case 'workspace':
@@ -248,7 +309,7 @@ function setUpListeners(){
 
         if(!focus.on){
           const x=event.clientX - fontData.font_size*2;
-          const y=event.clientY-230 + document.querySelector('.col').scrollTop;
+          const y=event.clientY-41 + document.querySelector('.col').scrollTop;
           addTextItem(x,y);
           cleanUp();
           refreshCanvas();
@@ -369,16 +430,50 @@ function setUpListeners(){
         case 'font-layer':
         if(focus.on){
           focus.item.layer=parseInt(item.dataset.value);
+          // switchLayer(item.dataset.value);
+          // updateLayerPanel(item.dataset.value);
           displayUpdate=true;
           refreshCanvas();
         }
         fontData.layer=parseInt(item.dataset.value);
+        break;
+        case 'mixer':
+        outputData.mixer=item.dataset.value;
+        displayUpdate=true;
+        break;
+        case 'effect':
+        outputData.layers[outputData.layer].effect=item.dataset.value;
+        displayUpdate=true;
         break;
       }
 
       // item.classList.toggle('dropped');
     })
   });
+
+
+  document.querySelectorAll('#color-pick input').forEach((item, i) => {
+    item.addEventListener('input',function(){
+      outputData.colors[outputData.layer][i]=item.value;
+      document.querySelector('.swatch').style.setProperty('--'+item.name, item.value);
+    })
+  });
+
+
+  document.querySelectorAll('#which-layer li').forEach((item, i) => {
+    item.addEventListener('click',function(){
+      document.querySelector('#which-layer .selected').classList.remove('selected');
+      item.classList.add('selected');
+      outputData.layer=item.dataset.value;
+      document.querySelector('#gl-canvas').dataset.layer=item.dataset.value;
+      if(item.dataset.value<4){
+        updateLayerPanel(item.dataset.value);
+      }
+
+      //add function to change layer display to data for current layer
+    })
+  });
+
 
 
 
@@ -415,16 +510,34 @@ function setUpListeners(){
     })
   });
 
+  document.querySelectorAll('.number-field').forEach((item, i) => {
+    let numInput=item.querySelector('input[type="number"]');
+    let numSlider=item.querySelector('input[type="range"]');
 
-  sizeSlider.addEventListener('change',function(){
-    sizeInput.value=sizeSlider.value;
-    updateFontSize(sizeSlider.value)
+    numSlider.addEventListener('change',function(){
+      numInput.value=numSlider.value;
+      updateNumField(numSlider.value,item.dataset.for);
 
-  })
-  sizeInput.addEventListener('input',function(){
-    sizeSlider.value=sizeInput.value;
-    updateFontSize(sizeInput.value)
-  })
+    })
+    numInput.addEventListener('change',function(){
+      numSlider.value=numInput.value;
+      updateNumField(numInput.value,item.dataset.for);
+    })
+
+  });
+
+  function updateNumField(val,type){
+    switch(type){
+      case 'font-size':
+      updateFontSize(val)
+      break;
+      case 'spread':
+      outputData.layers[outputData.layer].spread=val;
+      break;
+    }
+  }
+
+
 
   function updateFontSize(val){
     if(focus.on){
@@ -479,7 +592,7 @@ function draw(){
   }
 
   // console.log(activeLayers)
-  shader.render(activeLayers);
+  shader.render(activeLayers,outputData);
   window.requestAnimationFrame(draw);
 }
 

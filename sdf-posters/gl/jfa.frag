@@ -45,7 +45,7 @@ vec4 step_jfa(float pass){
   // looking at pixel P:
 
   //offset neighbors according to pass number
-  int offset= int(exp2(log2(img_size.x)  - pass));
+  int offset= int(exp2(log2(max(img_size.x,img_size.y))  - pass));
 
   vec4 rgba=vec4(0.,0.,0.,1.);
   float bestDist=900000.;

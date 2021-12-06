@@ -16,6 +16,14 @@
     <section id='figures'>
       <div id="dom-canvas" class='col'  data-mode='move'>
         <h2>Input</h2>
+        <figure>
+          <canvas id='layer0' width="500" height="500" data-type='canvas'></canvas>
+          <canvas id='layer1'  width="500" height="500" data-type='canvas'></canvas>
+          <canvas id='layer2'  width="500" height="500" data-type='canvas'></canvas>
+          <div id="workspace" data-type='workspace'>
+
+          </div>
+        </figure>
         <div class="controls" id='dom-controls'>
           <div class="global">
             <div class="slab" id='tool-table'>
@@ -51,7 +59,7 @@
                   </ul>
                 </div>
               </div>
-              <div class="slab">
+              <div class="slab number-field" data-for='font-size'>
                 <label for="size" class='noselect'>Size:</label>
                 <input type="number" name="size" value="50" min='20' max='500' step='1'>
                 <input type="range" name="size-range" value="50" min='20' max='500' step='1'>
@@ -95,26 +103,88 @@
 
           <!-- <p>Bobby</p> -->
         </div>
+
+      </div>
+      <div id="gl-canvas" class='col' data-layer='0'>
+        <h2>Output</h2>
         <figure>
-          <canvas id='layer0' width="500" height="500" data-type='canvas'></canvas>
-          <canvas id='layer1'  width="500" height="500" data-type='canvas'></canvas>
-          <canvas id='layer2'  width="500" height="500" data-type='canvas'></canvas>
-          <div id="workspace" data-type='workspace'>
+          <canvas width="500" height="500"></canvas>
+        </figure>
+        <div class="controls" id='gl-controls'>
+          <div class="global">
+
+            <!-- <ul class='which-layer'>
+              <li data-value='0'>layer 0</li>
+              <li data-value='1'>layer 1</li>
+              <li data-value='2'>layer 2</li>
+              <li class='selected' data-value='composite'>composite</li>
+            </ul> -->
+            <div class="slab" id='which-layer'>
+              <label for="">Layer: </label>
+              <ul>
+                <li data-value='0'>0</li>
+                <li data-value='1'>1</li>
+                <li data-value='2'>2</li>
+                <li data-value='4' class='selected' >composite</li>
+              </ul>
+            </div>
 
           </div>
-        </figure>
-      </div>
-      <div id="gl-canvas" class='col'>
-        <h2>Output</h2>
-        <div class="controls" id='gl-controls'>
-          <div class="">
+          <div class="node-specific">
+            <div class="effect-panel">
+              <div class="slab">
+                <label for="" class='noselect'>Effect:</label>
+                <div class="dropdown">
+                  <ul class='noselect' data-select='effect'>
+                    <li class='selected' data-value='0'>topography</li>
+                    <li data-value='1'>spiky</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="slab number-field" data-for='spread'>
+                <label for="spread" class='noselect'>Spread:</label>
+                <input type="number" name="spread" value="500" min='0' max='1000' step='1'>
+                <input type="range" name="spread-range" value="500" min='0' max='1000' step='1'>
+              </div>
+              <div id='color-pick' class="slab">
+                <label for="">Color:</label>
+
+                <ul>
+                  <div class="rgb-pair">
+                    <!-- <label for="r">R:</label> -->
+                    <input type="number" name="r" value="0" min='0' max='255' step='1'>
+                  </div>
+                  <div class="rgb-pair">
+                    <!-- <label for="g">G:</label> -->
+                    <input type="number" name="g" value="0" min='0' max='255' step='1'>
+                  </div>
+                  <div class="rgb-pair">
+                    <!-- <label for="b">B:</label> -->
+                    <input type="number" name="b" value="0" min='0' max='255' step='1'>
+                  </div>
+                </ul>
+                <div class="swatch"></div>
+
+                <!-- <label for="spread" class='noselect'>Spread:</label>
+                <input type="number" name="spread" value="500" min='20' max='500' step='1'>
+                <input type="range" name="spread-range" value="500" min='20' max='500' step='1'> -->
+              </div>
+            </div>
+            <div class="composite-panel">
+              <div class="slab">
+                <label class='noselect' for="">Mixer:</label>
+                <div class="dropdown">
+                  <ul class='noselect' data-select='mixer'>
+                    <li class='selected' data-value='0'>multiply</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
 
           </div>
             <!-- <p>Bobby</p> -->
         </div>
-        <figure>
-          <canvas width="500" height="500"></canvas>
-        </figure>
       </div>
     </section>
 

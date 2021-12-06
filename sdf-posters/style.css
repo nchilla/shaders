@@ -15,7 +15,7 @@ h2{
   border-bottom:1px solid black;
   position:sticky;
   top: 0;
-  z-index:1000;
+  z-index:3000;
 }
 
 h3{
@@ -72,7 +72,7 @@ button.selected{
 
 }
 
-li{
+.dropdown li{
   background-color: white;
   border:1px dotted black;
   border-top:0px;
@@ -81,7 +81,7 @@ li{
   order:2;
   /* padding-bottom:6px; */
 }
-li.selected{
+.dropdown li.selected{
   order:0;
   padding-top:0px;
   border-left:0px;
@@ -92,6 +92,28 @@ li.selected{
   overflow:visible;
 }
 
+#which-layer ul{
+  display:flex;
+  flex-flow:row wrap;
+}
+
+#which-layer li{
+  border:1px dotted black;
+  padding:8px;
+  cursor:pointer;
+}
+#which-layer li.selected{
+  background-color: LightGoldenRodYellow;
+}
+
+
+#gl-canvas[data-layer='0'] .effect-panel,#gl-canvas[data-layer='1'] .effect-panel,#gl-canvas[data-layer='2'] .effect-panel{
+  display:block;
+}
+
+#gl-canvas[data-layer='4'] .composite-panel{
+  display:block;
+}
 
 .dropdown::after{
   content:'∨';
@@ -109,6 +131,40 @@ li.selected{
   margin-bottom:7px;
   /* border-bottom:1px solid black; */
 }
+
+
+
+#color-pick ul{
+  display:flex;
+  flex-flow:row nowrap;
+  align-items: center;
+  border:1px dotted black;
+  /* padding-left:0px 3px; */
+}
+
+.swatch{
+  --r:0;
+  --g:0;
+  --b:0;
+  background-color:rgb(var(--r),var(--g),var(--b));
+  border:1px dotted black;
+  border-right:0px;
+  height:29px;
+  width:29px;
+}
+
+.rgb-pair{
+  /* padding-left:5px; */
+  border-left:1px dotted black;
+}
+.rgb-pair:first-child{
+  border-left:0px;
+}
+
+.rgb-pair label{
+  margin-right:-8px;
+}
+
 
 #move-tool{
   font-size:18px;
@@ -132,7 +188,7 @@ li.selected{
   width:100vw;
   height:100vh;
   box-sizing: border-box;
-  background-color: lavenderblush;
+  /* background-color: lavenderblush; */
 
   --aspect-ratio:0.75;
 }
@@ -183,8 +239,9 @@ figure{
   padding-bottom:calc(var(--aspect-ratio)*50vw);
   position:relative;
   width:100%;
-  margin-bottom:100px;
+  /* margin-bottom:100px; */
   /* min-height:100vh; */
+  background-color: lavenderblush;
 }
 
 #workspace{
@@ -265,7 +322,7 @@ canvas{
   position:absolute;
   width:100%;
   height:100%;
-  border-top:1px solid black;
+  /* border-top:1px solid black; */
   border-bottom:1px solid black;
 }
 
@@ -297,7 +354,7 @@ input[type='number'],input[type='number']:focus {
 }
 
 input[type='range']{
-  flex:1;
+  /* flex:1; */
   margin-left:10px;
 }
 
