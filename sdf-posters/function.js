@@ -250,16 +250,19 @@ function setUpListeners(){
           const x=event.clientX - fontData.font_size*2;
           const y=event.clientY-230 + document.querySelector('.col').scrollTop;
           addTextItem(x,y);
+          cleanUp();
           refreshCanvas();
           resetFocus();
           displayUpdate=true;
         }else{
           focus.on=false;
+          cleanUp();
           resetFocus();
         }
 
       }else{
         focus.on=false;
+        cleanUp();
         resetFocus();
       }
       break;
@@ -271,14 +274,19 @@ function setUpListeners(){
 
   })
 
+  function cleanUp(){
+    items.forEach((item, i) => {
+      if(item.value.length==0){
+        item.remove();
+      }
+    });
+  }
+
   function resetFocus(){
 
     items.forEach((item, i) => {
       if(item.node){
         item.node.classList.remove('focus');
-      }
-      if(item.value.length==0){
-        item.remove();
       }
     });
     composingColumn.classList.remove('focus-text');
@@ -470,7 +478,8 @@ function draw(){
     displayUpdate=false;
   }
 
-  shader.render();
+  // console.log(activeLayers)
+  shader.render(activeLayers);
   window.requestAnimationFrame(draw);
 }
 

@@ -38,8 +38,11 @@ class Shader {
       uniforms:{
         resolution:gl.getUniformLocation(shader_program,'u_resolution'),
         sampler:gl.getUniformLocation(shader_program, 'u_sampler'),
+        sampler1:gl.getUniformLocation(shader_program, 'u_sampler1'),
+        sampler2:gl.getUniformLocation(shader_program, 'u_sampler2'),
         pass:gl.getUniformLocation(shader_program, 'u_pass'),
-        time:gl.getUniformLocation(shader_program, "u_time")
+        time:gl.getUniformLocation(shader_program, "u_time"),
+        layers_active:gl.getUniformLocation(shader_program, "active")
       }
     }
 
@@ -56,6 +59,8 @@ class Shader {
       this.declare_texture(),
       this.declare_texture()
     ]
+
+    this.placeholder=this.declare_texture()
 
     this.jfa_storage=this.declare_texture();
     this.jfa_alt_storage=this.declare_texture();
@@ -76,24 +81,36 @@ class Shader {
 
   }
 
-  render(){
-    this.pass=0;
+  render(active){
+
     const passMetric=this.resolution[0]>this.resolution[1]?this.resolution[0]:this.resolution[1];
 
-    while(this.pass<=Math.log2(passMetric)){
-      this.render_jump_flood();
-      this.pass++;
-    }
+    for(let i = 0; i<inputs.length; i++){
+      this.pass=0;
+      while(this.pass<=Math.log2(passMetric)){
+        const last = this.pass+1>Math.log2(passMetric);
+        this.render_jump_flood(last,i);
+        this.pass++;
+      }
 
+    }
     this.pass-=1;
-    this.render_poster();
+
+
+    this.render_poster(active);
 
 
   }
 
-  render_jump_flood(){
+  render_jump_flood(last,ind){
+
     let input_buffer=this.pass%2==0?this.jfa_storage:this.jfa_alt_storage;
     let output_buffer=this.pass%2==0?this.jfa_alt_storage:this.jfa_storage;
+    if(last){
+      output_buffer=this.texture_storage[ind];
+    }
+
+
 
     gl.useProgram(this.jfa.program);
     gl.enable(gl.DEPTH_TEST);
@@ -105,7 +122,7 @@ class Shader {
       gl.bindTexture(gl.TEXTURE_2D, input_buffer);
       gl.uniform1i(this.jfa.uniforms.sampler, 0);
     }else{
-      gl.bindTexture(gl.TEXTURE_2D, this.canvas_data[0]);
+      gl.bindTexture(gl.TEXTURE_2D, this.canvas_data[ind]);
       gl.uniform1i(this.jfa.uniforms.sampler, 0);
     }
 
@@ -120,17 +137,37 @@ class Shader {
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   }
 
-  render_poster(){
-    let input_buffer=this.pass%2==0?this.jfa_alt_storage:this.jfa_storage;
+  render_poster(active){
+    // let input_buffer=this.pass%2==0?this.jfa_alt_storage:this.jfa_storage;
+    // let input_buffer=this.texture_storage[0];
     gl.useProgram(this.shader.program);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, input_buffer);
+
+
+    //texture samplers
     gl.uniform1i(this.shader.uniforms.sampler, 0);
+    gl.uniform1i(this.shader.uniforms.sampler1, 1);
+    gl.uniform1i(this.shader.uniforms.sampler2, 2);
+
+    //bind texture inits
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, this.texture_storage[0]);
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, this.texture_storage[1]);
+    gl.activeTexture(gl.TEXTURE2);
+    gl.bindTexture(gl.TEXTURE_2D, this.texture_storage[2]);
+
+
+    // gl.activeTexture(gl.TEXTURE0);
+    // gl.bindTexture(gl.TEXTURE_2D, input_buffer);
+
+
+
 
 
     gl.uniform1f(this.shader.uniforms.pass, this.pass);
     gl.uniform2fv(this.shader.uniforms.resolution,this.resolution);
+    gl.uniform3fv(this.shader.uniforms.layers_active,active.map(a=>a?0:1));
     gl.uniform1f(this.shader.uniforms.time, (Date.now() - this.start_time) * .001);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
@@ -164,6 +201,14 @@ class Shader {
     ];
     this.jfa_storage=this.declare_texture();
     this.jfa_alt_storage=this.declare_texture();
+
+    this.texture_storage=[
+      this.declare_texture(),
+      this.declare_texture(),
+      this.declare_texture()
+    ]
+
+    this.placeholder=this.declare_texture();
   }
 
 
