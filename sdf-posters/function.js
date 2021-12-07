@@ -793,7 +793,7 @@ function resetFocus(){
 
   floater.classList.remove('on');
 
-  if(focus.item&&focus.on){
+  if(focus.item&&focus.on&&focus.node){
     focus.item.node.classList.add('focus');
     composingColumn.classList.add('focus-text');
 
