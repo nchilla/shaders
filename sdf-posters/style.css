@@ -28,7 +28,7 @@ label{
   margin-right:3px;
 }
 
-button{
+#tool-table button{
   font-size:25px;
   border:1px dotted black;
   border-radius:50%;
@@ -40,11 +40,36 @@ button{
   margin:0px 3px;
 }
 
-button.selected{
+#tool-table button.selected{
   background-color: LightGoldenRodYellow;
 }
 
+
+.remove{
+  padding-bottom:50px;
+  padding-top:10px;
+  color:red;
+  text-decoration: underline;
+}
+
+.duplicate{
+  padding-bottom:50px;
+  padding-top:10px;
+  color:green;
+  text-decoration: underline;
+}
+
+.slab.end-items{
+  display:none;
+}
+
+.focus-text .slab.end-items,.focus-stroke .slab.end-items{
+  display:block;
+}
+
+
 .dropdown{
+  min-width:0;
   z-index:0;
   position:relative;
   cursor:pointer;
@@ -54,6 +79,28 @@ button.selected{
   flex-flow:row nowrap;
   /* padding:7px; */
   /* padding:0px 7px; */
+}
+
+
+.duplication-notice{
+  opacity:0;
+  transition:opacity 0.3s;
+}
+
+.notice,.duplication-notice{
+  background-color: white;
+  position:absolute;
+  bottom:0;
+  right:0;
+  padding:5px;
+}
+
+.notice{
+  display:none;
+}
+
+.drawing .notice{
+  display:block;
 }
 
 
@@ -69,8 +116,29 @@ button.selected{
   justify-content: flex-start;
   box-sizing: border-box;
   padding-top:7px;
+  min-width:0;
 
 }
+
+.floater{
+  pointer-events: none;
+  position:absolute;
+  /* --x:0;
+  --y:0;
+  --w:0;
+  --l:0; */
+  top:0;
+  left:0;
+  width:0;
+  height:0;
+}
+
+.floater.on{
+  border:1px solid rgba(0,0,0,0.5);
+}
+
+
+
 
 .dropdown li{
   background-color: white;
@@ -79,6 +147,10 @@ button.selected{
   padding:7px;
   /* margin-bottom:7px; */
   order:2;
+  text-overflow: ellipsis;
+  overflow-x:clip;
+  white-space: nowrap;
+  max-width:100%;
   /* padding-bottom:6px; */
 }
 .dropdown li.selected{
@@ -166,16 +238,16 @@ button.selected{
 }
 
 
-#move-tool{
+#tool-table #move-tool{
   font-size:18px;
   padding-bottom:3px;
 }
 
-#text-tool{
+#tool-table #text-tool{
   font-size:20px;
 }
 
-#brush-tool{
+#tool-table #brush-tool{
   font-size:35px;
 }
 
@@ -200,10 +272,12 @@ button.selected{
   width:100%;
   display:flex;
   flex-flow: row nowrap;
+  padding-bottom:100px;
 }
 
 .controls>div{
   flex:1;
+  max-width:50%;
   padding-top:10px;
   box-sizing: border-box;
   /* padding:20px; */
@@ -279,6 +353,20 @@ figure{
   display:block;
 }
 
+/* nav{
+  display:none;
+  padding:10px;
+}
+
+#dom-canvas[data-mode='brush'] .line-nav{
+  display:block;
+} */
+
+
+
+#dom-canvas[data-mode='brush'] .node{
+  cursor:crosshair;
+}
 
 
 
@@ -354,8 +442,9 @@ input[type='number'],input[type='number']:focus {
 }
 
 input[type='range']{
-  /* flex:1; */
+  flex:1;
   margin-left:10px;
+  min-width: 0;
 }
 
 input[type=range]{

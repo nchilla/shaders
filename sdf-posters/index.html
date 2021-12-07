@@ -14,22 +14,27 @@
 
   <div id="page-wrap">
     <section id='figures'>
-      <div id="dom-canvas" class='col'  data-mode='move'>
+      <div id="dom-canvas" class='col'  data-mode='text'>
         <h2>Input</h2>
         <figure>
-          <canvas id='layer0' width="500" height="500" data-type='canvas'></canvas>
-          <canvas id='layer1'  width="500" height="500" data-type='canvas'></canvas>
-          <canvas id='layer2'  width="500" height="500" data-type='canvas'></canvas>
+          <canvas id='layer0' width="500" height="500" data-type='workspace'></canvas>
+          <canvas id='layer1'  width="500" height="500" data-type='workspace'></canvas>
+          <canvas id='layer2'  width="500" height="500" data-type='workspace'></canvas>
           <div id="workspace" data-type='workspace'>
 
           </div>
+          <div class="floater">
+
+          </div>
+          <div class="notice">press esc to end</div>
+          <div class="duplication-notice">successfully duplicated</div>
         </figure>
         <div class="controls" id='dom-controls'>
           <div class="global">
             <div class="slab" id='tool-table'>
               <label for="">Tools: </label>
-              <button id='move-tool' data-val='move' title='selection tool' type="button" name="button" class='selected'>⌖</button>
-              <button id='text-tool' data-val='text' title='type tool' type="button" name="button">t</button>
+              <button id='move-tool' data-val='move' title='selection tool' type="button" name="button">⌖</button>
+              <button id='text-tool' data-val='text' title='type tool' type="button" name="button" class='selected'>t</button>
               <button id='brush-tool' data-val='brush' title='draw tool' type="button" name="button">✎</button>
             </div>
             <div class="slab">
@@ -40,6 +45,14 @@
                   <li data-value='1'>square</li>
                   <li data-value='1.3'>8.5x11</li>
                   <li data-value='1.56'>11x17</li>
+                </ul>
+              </div>
+            </div>
+            <div class="slab">
+              <label for="">Selected:</label>
+              <div class="dropdown" >
+                <ul class='noselect' data-select='item-select'>
+                  <li class='selected' data-value='none' data-type='none'>none</li>
                 </ul>
               </div>
             </div>
@@ -78,6 +91,7 @@
                 <div class="dropdown" >
                   <ul class='noselect' data-select='font-weight'>
                     <li class='selected' data-value='400'>regular</li>
+                    <li data-value='300'>light</li>
                     <li data-value='600'>bold</li>
                   </ul>
                 </div>
@@ -94,9 +108,51 @@
               </div>
 
 
-
+              <div class="slab end-items">
+                <button type="button" name="button" class='remove'>Delete</button>
+                <span>•</span>
+                <button type="button" name="button" class='duplicate'>Duplicate</button>
+              </div>
             </div>
             <div class="brush-property-panel">
+              <div class="slab number-field" data-for='stroke-width'>
+                <label for="size" class='noselect'>Width:</label>
+                <input type="number" name="size" value="20" min='1' max='200' step='1'>
+                <input type="range" name="size-range" value="20" min='1' max='200' step='1'>
+              </div>
+              <div class="slab">
+                <label class='noselect' for="">Layer:</label>
+                <div class="dropdown" >
+                  <ul class='noselect' data-select='brush-layer'>
+                    <li class='selected' data-value='0'>0</li>
+                    <li data-value='1'>1</li>
+                    <li data-value='2'>2</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="slab">
+                <label class='noselect' for="">Corners:</label>
+                <div class="dropdown" >
+                  <ul class='noselect' data-select='corners'>
+                    <li class='selected' data-value='miter'>sharp</li>
+                    <li data-value='round'>round</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="slab">
+                <label class='noselect' for="">Caps:</label>
+                <div class="dropdown" >
+                  <ul class='noselect' data-select='line-caps'>
+                    <li class='selected' data-value='butt'>butt</li>
+                    <li data-value='round'>round</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="slab end-items">
+                <button type="button" name="button" class='remove'>Delete</button>
+                <span>•</span>
+                <button type="button" name="button" class='duplicate'>Duplicate</button>
+              </div>
 
             </div>
           </div>
@@ -138,14 +194,16 @@
                   <ul class='noselect' data-select='effect'>
                     <li class='selected' data-value='0'>topography</li>
                     <li data-value='1'>spiky</li>
+                    <li data-value='2'>galaxy</li>
+                    <!-- <li data-value='3'>shadow</li> -->
                   </ul>
                 </div>
               </div>
 
               <div class="slab number-field" data-for='spread'>
                 <label for="spread" class='noselect'>Spread:</label>
-                <input type="number" name="spread" value="500" min='0' max='1000' step='1'>
-                <input type="range" name="spread-range" value="500" min='0' max='1000' step='1'>
+                <input type="number" name="spread" value="500" min='0' max='2000' step='1'>
+                <input type="range" name="spread-range" value="500" min='0' max='2000' step='1'>
               </div>
               <div id='color-pick' class="slab">
                 <label for="">Color:</label>
@@ -176,7 +234,8 @@
                 <label class='noselect' for="">Mixer:</label>
                 <div class="dropdown">
                   <ul class='noselect' data-select='mixer'>
-                    <li class='selected' data-value='0'>multiply</li>
+                    <li data-value='0'>multiply</li>
+                    <li class='selected' data-value='1'>min</li>
                   </ul>
                 </div>
               </div>

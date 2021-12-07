@@ -41,24 +41,43 @@ float trimTransform(vec4 texturePixel,float spread){
 
 
 
-float e_topograph(float dist,float spread){
-  float fill= mod(dist, u_resolution.x/5000.) * 10.0;
-  fill = step(0.1, fill+0.02);
-  float edge=step(spread/u_resolution.x,dist);
+float e_topograph(float dist,float spread,float larger){
+  float fill= mod(dist+0.0001*u_resolution.x, u_resolution.x/5000.) * 10.0;
+  fill = step(0.0002*u_resolution.x, fill);
+  float edge=step(u_resolution.x*spread*0.000003,dist);
   fill=mix(fill,1.,edge);
   float innerEdge=step(0.01,dist);
   fill=mix(0.,fill,innerEdge);
   return fill;
 }
 
-float e_spiky(float dist,float spread, float angle){
-  float fill =mod(angle, u_resolution.x/2000.)*5.;
-  fill = step(0.1, fill*dist);
-  float edge=step(spread/u_resolution.x,dist);
+float e_spiky(float dist,float spread, float angle,float larger){
+
+
+  float fill =mod(angle, larger*0.0005)*5.;
+  fill = step(0.00005*larger, fill*dist);
+
+  float edge=step(spread/larger,dist);
   fill=mix(fill,1.,edge);
   float innerEdge=step(0.01,dist);
   fill=mix(0.,fill,innerEdge);
   return fill;
+}
+
+float e_galaxy(float dist,float spread, float angle,float larger){
+
+  float fill= mod(degrees(angle), larger*0.0005);
+  fill = step(0.00005*larger, fill*dist);
+
+  float edge=step(spread/larger,dist);
+  fill=mix(fill,1.,edge);
+  float innerEdge=step(0.01,dist);
+  fill=mix(0.,fill,innerEdge);
+  return fill;
+}
+
+float e_vanilla(vec2 samp){
+  return min(samp.r,samp.g);
 }
 
 
@@ -66,6 +85,13 @@ vec3 f_multiply(vec3 l0,vec3 l1,vec3 l2){
   vec3 rgb=l0*l1*l2;
   return rgb;
 }
+
+vec3 f_overlap(vec3 l0,vec3 l1,vec3 l2){
+  vec3 rgb=min(l0,l1);
+  rgb=min(rgb,l2);
+  return rgb;
+}
+
 
 
 void main(){
@@ -92,11 +118,22 @@ void main(){
       vec2 scaledCoord=samples[i].rg*u_resolution;
       float dist=length(scaledCoord.xy-gl_FragCoord.xy)/200.;
       float angle=atan((scaledCoord.y-gl_FragCoord.y)/(scaledCoord.x-gl_FragCoord.x));
+      float larger=max(u_resolution.x,u_resolution.y);
+      float mixColor=0.;
+
       if(u_effects[i]==0.){
-        layers[i]=mix(u_colors[i],vec3(1.),e_topograph(dist,u_spreads[i]));
+        mixColor=e_topograph(dist,u_spreads[i],larger);
       }else if(u_effects[i]==1.){
-        layers[i]=mix(u_colors[i],vec3(1.),e_spiky(dist,u_spreads[i],angle));
+        mixColor=e_spiky(dist,u_spreads[i],angle,larger);
+        // layers[i]=mix(u_colors[i],vec3(1.),);
+      }else if(u_effects[i]==2.){
+        mixColor=e_galaxy(dist,u_spreads[i],angle,larger);
+        // layers[i]=mix(u_colors[i],vec3(1.),);
+      }else if(u_effects[i]==3.){
+        mixColor=e_vanilla(samples[i].rg);
       }
+
+      layers[i]=mix(u_colors[i],vec3(1.),mixColor);
       layers[i]=mix(layers[i],vec3(1.),u_active[i]);
 
     }
@@ -116,6 +153,8 @@ void main(){
       //if composite mode is on, do a blending pass
       if(u_mixer==0.){
         rgb=f_multiply(layers[0],layers[1],layers[2]);
+      }else if(u_mixer==1.){
+        rgb=f_overlap(layers[0],layers[1],layers[2]);
       }
     }
 
