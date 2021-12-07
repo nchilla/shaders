@@ -81,7 +81,7 @@ const fontData={
 const strokeData={
   stroke_width:20,
   layer:0,
-  corners:'round',
+  corners:'miter',
   caps:'butt'
 }
 
