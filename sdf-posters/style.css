@@ -1,5 +1,7 @@
 body{
   font-family:'dejavu-mono';
+  -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 
 }
 
@@ -41,7 +43,7 @@ label{
 }
 
 #tool-table button.selected{
-  background-color: LightGoldenRodYellow;
+  background-color: lemonchiffon;
 }
 
 
@@ -175,7 +177,7 @@ label{
   cursor:pointer;
 }
 #which-layer li.selected{
-  background-color: LightGoldenRodYellow;
+  background-color: lemonchiffon;
 }
 
 
@@ -251,19 +253,74 @@ label{
   font-size:35px;
 }
 
-
-
 #page-wrap{
   position:fixed;
-  top:0;
+  top:57px;
   left:0;
   width:100vw;
-  height:100vh;
+  height:calc(100vh - 57px);
   box-sizing: border-box;
   /* background-color: lavenderblush; */
 
   --aspect-ratio:0.75;
 }
+
+details{
+  position:fixed;
+  top:100vh;
+  /* transform:translateY(-100%); */
+  left:0;
+  top:0;
+  z-index:400;
+  width:100vw;
+  padding:20px;
+  box-sizing:border-box;
+  background-color:lemonchiffon;
+  /* color:white; */
+  height:fit-content;
+  border-bottom:1px solid black;
+}
+
+
+summary{
+  cursor:pointer;
+}
+
+
+
+details p,details[open] summary{
+line-height:20px;
+  margin-bottom:10px;
+  letter-spacing:-0.2px;
+  max-width:600px;
+}
+
+details p{
+  font-family:'Times New Roman', Times, serif;
+  font-size:20px;
+  line-height:24px;
+}
+
+details[open]{
+  height:50vh;
+}
+
+@media(max-width:600px){
+  details[open]{
+    height:100vh;
+    
+  }
+  summary{
+    pointer-events:none;
+  }
+
+  #page-wrap{
+    display:none;
+  }
+}
+
+
+
 
 .controls{
   background-color: white;

@@ -12,6 +12,14 @@
 </head>
 <body>
 
+  <details id="notice" open>
+  <summary>About this page</summary>
+    <p>Hi! I made this experiment with <a href="https://en.wikipedia.org/wiki/Signed_distance_function">signed distance fields</a> in a WebGL-based shaders course in college. You can input text and line drawings, and output posters and graphics with different applied effects (right click images and click 'save image as' to export). The generator first uses the <a href="https://en.wikipedia.org/wiki/Jump_flooding_algorithm">jump-flood algorithm</a> to calculate the shortest distance of each pixel from the input graphic, and then that data is used to determine its color value.</p>
+
+    <p>I should also warn you that this page is pretty GPU-intensive, because I didn’t really know what I was doing when I made it and haven’t done the work to optimize it properly.</p>
+
+    <p>Lastly, it’s not set up to work on small screens. Sorry if you’re reading this on your phone.</p>
+  </details>
   <div id="page-wrap">
     <section id='figures'>
       <div id="dom-canvas" class='col'  data-mode='text'>
