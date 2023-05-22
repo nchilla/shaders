@@ -635,7 +635,7 @@ function setUpListeners(){
 
   window.addEventListener('mousemove',function(){
     const x=event.clientX;
-    const y=event.clientY-41 + document.querySelector('.col').scrollTop;
+    const y=event.clientY-98 + document.querySelector('.col').scrollTop;
 
     if(dragMode){
       // console.log(event);
