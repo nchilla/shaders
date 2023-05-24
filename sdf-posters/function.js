@@ -407,7 +407,7 @@ window.addEventListener('load',function(){
 
 
 
-
+  // if(this.window.matchMedia('(max-width:600px)').matches) document.querySelector('#notice').setAttribute('open',true);
   const vert_shader_src=fetch('gl/shader.vert').then((response) => {return response.text();});
   const jfa_shader_src=fetch('gl/jfa.frag').then((response) => {return response.text();});
   const frag_shader_src=fetch('gl/shader.frag').then((response) => {return response.text();});
@@ -975,7 +975,8 @@ function resolutionChange(){
     strokeFocus.stroke.focus();
   }
 
-
+  if(this.window.matchMedia('(max-width:600px)').matches) document.querySelector('#notice').setAttribute('open',true);
+  else document.querySelector('#notice').removeAttribute('open');
   // inputs[0].width=inputs[0].offsetWidth;
   // inputs[0].height=inputs[0].offsetHeight;
   // output.width=output.offsetWidth;

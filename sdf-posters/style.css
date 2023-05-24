@@ -281,6 +281,15 @@ details{
   border-bottom:1px solid black;
 }
 
+details img{
+  display:none;
+  width:100%;
+  mix-blend-mode:multiply;
+  margin-bottom:20px;
+}
+
+
+
 
 summary{
   cursor:pointer;
@@ -308,9 +317,22 @@ details[open]{
 @media(max-width:600px){
   details[open]{
     height:100vh;
+    overflow:scroll;
     
   }
+
+  details::after{
+    height:75px;
+    content:'';
+    display:block;
+  }
+
+  details img{
+    display:block;
+  
+  }
   summary{
+    display:none;
     pointer-events:none;
   }
 

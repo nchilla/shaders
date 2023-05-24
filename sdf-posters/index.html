@@ -12,8 +12,9 @@
 </head>
 <body>
 
-  <details id="notice" open>
+  <details id="notice">
   <summary>About this page</summary>
+    <img src="assets/about-this-page.png">
     <p>Hi! I made this page as an experiment with <a href="https://en.wikipedia.org/wiki/Signed_distance_function">signed distance fields</a> in a WebGL-based course in college. It allows you to input text and line drawings (left), and output posters and graphics with different applied effects (right). The generator uses the <a href="https://en.wikipedia.org/wiki/Jump_flooding_algorithm">jump-flood algorithm</a> to quickly calculate the shortest distance of each pixel from the input graphic, and then passes that data through a shader to determine its color value.</p>
 
     <p>I should also warn you that this page is pretty GPU-intensive, because I didn’t really know what I was doing when I made it and haven’t done the work to optimize it properly.</p>
